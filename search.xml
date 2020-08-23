@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>栈溢出</title>
+    <url>/2020/08/23/NTU%20STCS%202016%20Week3%20Stack%20Overflow/</url>
+    <content><![CDATA[<p>栈溢出(StackOverflow)</p>
+<a id="more"></a>
+<h2 id="objdump"><a href="#objdump" class="headerlink" title="objdump"></a>objdump</h2><p>常用指令</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> objdump -T binary</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat /proc/`pidof binary`/maps</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="readelf"><a href="#readelf" class="headerlink" title="readelf"></a>readelf</h2><p>分析elf binary header里的一些信息<br>readelf -a | grep STACK 看能否跑shellcode</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> readelf -a ./binary | grep STACK</span></span><br><span class="line">  GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RW  0x10</span><br></pre></td></tr></table></figure>
+
+<p>trick</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> readelf -a ./binary | grep <span class="string">&#x27; system@&#x27;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ldd binary</span></span><br></pre></td></tr></table></figure>
+
+<p>trick:execstack</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> execstack --h</span></span><br><span class="line">Usage: execstack [OPTION...]</span><br><span class="line">execstack -- program to query or set executable stack flag</span><br><span class="line"></span><br><span class="line">  -c, --clear-execstack      Clear executable stack flag bit</span><br><span class="line">  -q, --query                Query executable stack flag bit</span><br><span class="line">  -s, --set-execstack        Set executable stack flag bit</span><br><span class="line">  -?, --help                 Give this help list</span><br><span class="line">      --usage                Give a short usage message</span><br><span class="line">  -V, --version              Print program version</span><br><span class="line"></span><br><span class="line">Report bugs to &lt;jakub@redhat.com&gt;.</span><br></pre></td></tr></table></figure>
+
+<h2 id="ncat"><a href="#ncat" class="headerlink" title="ncat"></a>ncat</h2><p>建立local service环境，因为你不会再无法debug的情况下直接对remote做事<br>ncat -vc ./binary -kl 127.0.0.1 8888<br>ncat -vc ‘strace -e trace=read ./binary’ -kl ::1 4000</p>
+]]></content>
+      <categories>
+        <category>CTF</category>
+      </categories>
+      <tags>
+        <tag>CTF</tag>
+        <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hello World</title>
     <url>/2020/08/23/hello-world/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
@@ -18,44 +45,5 @@
 
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 ]]></content>
-  </entry>
-  <entry>
-    <title>Stack-Over-Flow</title>
-    <url>/2020/08/23/NTU%20STCS%202016%20Week3%20Stack%20Overflow/</url>
-    <content><![CDATA[<a id="more"></a>
-<h1 id="Stack-Overflow"><a href="#Stack-Overflow" class="headerlink" title="Stack Overflow"></a>Stack Overflow</h1><h2 id="objdump"><a href="#objdump" class="headerlink" title="objdump"></a>objdump</h2><ul>
-<li>常用指令</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> objdump -T binary</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat /proc/`pidof binary`/maps</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="readelf"><a href="#readelf" class="headerlink" title="readelf"></a>readelf</h2><ul>
-<li>分析elf binary header里的一些信息</li>
-<li>readelf -a | grep STACK 看能否跑shellcode</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> readelf -a ./binary | grep STACK</span></span><br><span class="line">  GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RW  0x10</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>trick</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> readelf -a ./binary | grep <span class="string">&#x27; system@&#x27;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ldd binary</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>trick:execstack</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> execstack --h</span></span><br><span class="line">Usage: execstack [OPTION...]</span><br><span class="line">execstack -- program to query or set executable stack flag</span><br><span class="line"></span><br><span class="line">  -c, --clear-execstack      Clear executable stack flag bit</span><br><span class="line">  -q, --query                Query executable stack flag bit</span><br><span class="line">  -s, --set-execstack        Set executable stack flag bit</span><br><span class="line">  -?, --help                 Give this help list</span><br><span class="line">      --usage                Give a short usage message</span><br><span class="line">  -V, --version              Print program version</span><br><span class="line"></span><br><span class="line">Report bugs to &lt;jakub@redhat.com&gt;.</span><br></pre></td></tr></table></figure>
-
-<h2 id="ncat"><a href="#ncat" class="headerlink" title="ncat"></a>ncat</h2><ul>
-<li>建立local service环境，因为你不会再无法debug的情况下直接对remote做事</li>
-<li>ncat -vc ./binary -kl 127.0.0.1 8888</li>
-<li>ncat -vc ‘strace -e trace=read ./binary’ -kl ::1 4000</li>
-</ul>
-]]></content>
-      <categories>
-        <category>CTF</category>
-      </categories>
-      <tags>
-        <tag>CTF</tag>
-        <tag>pwn</tag>
-      </tags>
   </entry>
 </search>

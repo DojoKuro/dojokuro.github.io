@@ -22,15 +22,15 @@
     var CONFIG = {"hostname":"dojokuro.xyz","root":"/","scheme":"Muse","version":"8.0.0-rc.5","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta name="description" content="Stack Overflowobjdump 常用指令  12$ objdump -T binary$ cat &#x2F;proc&#x2F;&#96;pidof binary&#96;&#x2F;maps  readelf 分析elf binary header里的一些信息 readelf -a | grep STACK 看能否跑shellcode  12$ readelf -a .&#x2F;binary | grep STACK  GNU_ST">
+  <meta name="description" content="栈溢出(StackOverflow)">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Stack-Over-Flow">
+<meta property="og:title" content="栈溢出">
 <meta property="og:url" content="http://dojokuro.xyz/2020/08/23/NTU%20STCS%202016%20Week3%20Stack%20Overflow/index.html">
 <meta property="og:site_name" content="DojoKuro&#39;s Blog">
-<meta property="og:description" content="Stack Overflowobjdump 常用指令  12$ objdump -T binary$ cat &#x2F;proc&#x2F;&#96;pidof binary&#96;&#x2F;maps  readelf 分析elf binary header里的一些信息 readelf -a | grep STACK 看能否跑shellcode  12$ readelf -a .&#x2F;binary | grep STACK  GNU_ST">
+<meta property="og:description" content="栈溢出(StackOverflow)">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-08-23T08:49:01.000Z">
-<meta property="article:modified_time" content="2020-08-23T12:53:34.069Z">
+<meta property="article:modified_time" content="2020-08-23T13:02:08.920Z">
 <meta property="article:author" content="DojoKuro">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="pwn">
@@ -50,7 +50,7 @@
   };
 </script>
 
-  <title>Stack-Over-Flow | DojoKuro's Blog</title>
+  <title>栈溢出 | DojoKuro's Blog</title>
   
 
 
@@ -177,7 +177,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Stack-Overflow"><span class="nav-number">1.</span> <span class="nav-text">Stack Overflow</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#objdump"><span class="nav-number">1.1.</span> <span class="nav-text">objdump</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#readelf"><span class="nav-number">1.2.</span> <span class="nav-text">readelf</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ncat"><span class="nav-number">1.3.</span> <span class="nav-text">ncat</span></a></li></ol></li></ol></div>
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#objdump"><span class="nav-number">1.</span> <span class="nav-text">objdump</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#readelf"><span class="nav-number">2.</span> <span class="nav-text">readelf</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ncat"><span class="nav-number">3.</span> <span class="nav-text">ncat</span></a></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -266,7 +266,7 @@
     
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Stack-Over-Flow
+          栈溢出
         </h1>
 
         <div class="post-meta">
@@ -277,7 +277,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-08-23 16:49:01 / Modified: 20:53:34" itemprop="dateCreated datePublished" datetime="2020-08-23T16:49:01+08:00">2020-08-23</time>
+              <time title="Created: 2020-08-23 16:49:01 / Modified: 21:02:08" itemprop="dateCreated datePublished" datetime="2020-08-23T16:49:01+08:00">2020-08-23</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -290,7 +290,7 @@
             </span>
 
           
-            <span id="/2020/08/23/NTU%20STCS%202016%20Week3%20Stack%20Overflow/" class="post-meta-item leancloud_visitors" data-flag-title="Stack-Over-Flow" title="Views">
+            <span id="/2020/08/23/NTU%20STCS%202016%20Week3%20Stack%20Overflow/" class="post-meta-item leancloud_visitors" data-flag-title="栈溢出" title="Views">
               <span class="post-meta-item-icon">
                 <i class="far fa-eye"></i>
               </span>
@@ -319,33 +319,21 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <a id="more"></a>
-<h1 id="Stack-Overflow"><a href="#Stack-Overflow" class="headerlink" title="Stack Overflow"></a>Stack Overflow</h1><h2 id="objdump"><a href="#objdump" class="headerlink" title="objdump"></a>objdump</h2><ul>
-<li>常用指令</li>
-</ul>
+        <p>栈溢出(StackOverflow)</p>
+<a id="more"></a>
+<h2 id="objdump"><a href="#objdump" class="headerlink" title="objdump"></a>objdump</h2><p>常用指令</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> objdump -T binary</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat /proc/`pidof binary`/maps</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="readelf"><a href="#readelf" class="headerlink" title="readelf"></a>readelf</h2><ul>
-<li>分析elf binary header里的一些信息</li>
-<li>readelf -a | grep STACK 看能否跑shellcode</li>
-</ul>
+<h2 id="readelf"><a href="#readelf" class="headerlink" title="readelf"></a>readelf</h2><p>分析elf binary header里的一些信息<br>readelf -a | grep STACK 看能否跑shellcode</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> readelf -a ./binary | grep STACK</span></span><br><span class="line">  GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RW  0x10</span><br></pre></td></tr></table></figure>
 
-<ul>
-<li>trick</li>
-</ul>
+<p>trick</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> readelf -a ./binary | grep <span class="string">&#x27; system@&#x27;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ldd binary</span></span><br></pre></td></tr></table></figure>
 
-<ul>
-<li>trick:execstack</li>
-</ul>
+<p>trick:execstack</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> execstack --h</span></span><br><span class="line">Usage: execstack [OPTION...]</span><br><span class="line">execstack -- program to query or set executable stack flag</span><br><span class="line"></span><br><span class="line">  -c, --clear-execstack      Clear executable stack flag bit</span><br><span class="line">  -q, --query                Query executable stack flag bit</span><br><span class="line">  -s, --set-execstack        Set executable stack flag bit</span><br><span class="line">  -?, --help                 Give this help list</span><br><span class="line">      --usage                Give a short usage message</span><br><span class="line">  -V, --version              Print program version</span><br><span class="line"></span><br><span class="line">Report bugs to &lt;jakub@redhat.com&gt;.</span><br></pre></td></tr></table></figure>
 
-<h2 id="ncat"><a href="#ncat" class="headerlink" title="ncat"></a>ncat</h2><ul>
-<li>建立local service环境，因为你不会再无法debug的情况下直接对remote做事</li>
-<li>ncat -vc ./binary -kl 127.0.0.1 8888</li>
-<li>ncat -vc ‘strace -e trace=read ./binary’ -kl ::1 4000</li>
-</ul>
+<h2 id="ncat"><a href="#ncat" class="headerlink" title="ncat"></a>ncat</h2><p>建立local service环境，因为你不会再无法debug的情况下直接对remote做事<br>ncat -vc ./binary -kl 127.0.0.1 8888<br>ncat -vc ‘strace -e trace=read ./binary’ -kl ::1 4000</p>
 
     </div>
 
