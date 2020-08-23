@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>栈溢出</title>
+    <title>PWN学习之0x01必备工具介绍</title>
     <url>/2020/08/23/NTU%20STCS%202016%20Week3%20Stack%20Overflow/</url>
-    <content><![CDATA[<p>栈溢出(StackOverflow)</p>
+    <content><![CDATA[<p>栈溢出(StackOverflow)入门工具介绍</p>
 <a id="more"></a>
 <h2 id="objdump"><a href="#objdump" class="headerlink" title="objdump"></a>objdump</h2><p>常用指令</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> objdump -T binary</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat /proc/`pidof binary`/maps</span></span><br></pre></td></tr></table></figure>
@@ -26,6 +26,18 @@
 <p>hook alarm by LD_PRELOAD</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// hook.c</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="title">alarm</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> seconds)</span></span>&#123;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, seconds);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> gcc hook.c -o hook.so -shared -fPIC -m32</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> LD_PRELOAD=./hook.so ./binary</span></span><br></pre></td></tr></table></figure>
+<p>LD_SHOW_AUXV</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ncat -vc <span class="string">&#x27;LD_SHOW_AUXV=1 ./level2&#x27;</span> -kl 127.0.0.1 6666</span></span><br><span class="line">Ncat: Version 7.80 ( https://nmap.org/ncat )</span><br><span class="line">Ncat: Listening on 127.0.0.1:6666</span><br><span class="line">Ncat: Connection from 127.0.0.1.</span><br><span class="line">Ncat: Connection from 127.0.0.1:36108</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> nc 127.0.0.1 6666</span></span><br><span class="line">AT_SYSINFO:           0xf7f7ab40</span><br><span class="line">AT_SYSINFO_EHDR:      0xf7f7a000</span><br><span class="line">...</span><br><span class="line">AT_PAGESZ:            4096</span><br><span class="line">AT_CLKTCK:            100</span><br><span class="line">AT_PHDR:              0x8048034</span><br><span class="line">AT_PHENT:             32</span><br><span class="line">AT_PHNUM:             9</span><br><span class="line">AT_BASE:              0xf7f7b000 #librarybase</span><br><span class="line">AT_FLAGS:             0x0</span><br><span class="line">AT_ENTRY:             0x8048350</span><br><span class="line">...</span><br><span class="line">AT_SECURE:            0</span><br><span class="line">AT_RANDOM:            0xffd88bcb #stackout canary</span><br><span class="line">AT_HWCAP2:            0x0</span><br><span class="line">...</span><br><span class="line">AT_EXECFN:            /bin/sh</span><br><span class="line">AT_PLATFORM:          x86_64</span><br><span class="line">Input:</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="qira"><a href="#qira" class="headerlink" title="qira"></a><a href="https://qira.me/">qira</a></h2><p>非常好用的gdb动态调试工具，部署略</p>
+<blockquote>
+<p>Ubuntu 14.04 and 16.04 supported out of the box.<br>18.04 is having a problem with building QEMU<br>See forked QEMU source at <a href="https://github.com/geohot/qemu/tree/qira">https://github.com/geohot/qemu/tree/qira</a> to fix.</p>
+</blockquote>
+<p><a href="https://github.com/geohot/qira">使用方法</a><br>开启指令 python qira.py -s ./binary</p>
+<h2 id="pwntools"><a href="#pwntools" class="headerlink" title="pwntools"></a>pwntools</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pip install pwntools</span><br></pre></td></tr></table></figure>
+<p><a href="http://docs.pwntools.com/en/stable/">Documentation</a></p>
+<h2 id="nasm"><a href="#nasm" class="headerlink" title="nasm"></a>nasm</h2><p>X86编译工具，编译shellcode使用</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">nasm -felf32 shell.asm -o shell.o</span><br><span class="line">ld -melf_i386 shell.o -o shell</span><br><span class="line">objcopy -O binary shell.o shell.bin</span><br><span class="line">objdump -b binary -m i386 -D shell.bin</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>CTF</category>

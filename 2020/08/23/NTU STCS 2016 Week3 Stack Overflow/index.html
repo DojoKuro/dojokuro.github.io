@@ -22,15 +22,15 @@
     var CONFIG = {"hostname":"dojokuro.xyz","root":"/","scheme":"Muse","version":"8.0.0-rc.5","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta name="description" content="栈溢出(StackOverflow)">
+  <meta name="description" content="栈溢出(StackOverflow)入门工具介绍">
 <meta property="og:type" content="article">
-<meta property="og:title" content="栈溢出">
+<meta property="og:title" content="PWN学习之0x01必备工具介绍">
 <meta property="og:url" content="http://dojokuro.xyz/2020/08/23/NTU%20STCS%202016%20Week3%20Stack%20Overflow/index.html">
 <meta property="og:site_name" content="DojoKuro&#39;s Blog">
-<meta property="og:description" content="栈溢出(StackOverflow)">
+<meta property="og:description" content="栈溢出(StackOverflow)入门工具介绍">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-08-23T08:49:01.000Z">
-<meta property="article:modified_time" content="2020-08-23T13:57:00.605Z">
+<meta property="article:modified_time" content="2020-08-23T14:55:24.400Z">
 <meta property="article:author" content="DojoKuro">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="pwn">
@@ -50,7 +50,7 @@
   };
 </script>
 
-  <title>栈溢出 | DojoKuro's Blog</title>
+  <title>PWN学习之0x01必备工具介绍 | DojoKuro's Blog</title>
   
 
 
@@ -177,7 +177,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#objdump"><span class="nav-number">1.</span> <span class="nav-text">objdump</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#readelf"><span class="nav-number">2.</span> <span class="nav-text">readelf</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ncat"><span class="nav-number">3.</span> <span class="nav-text">ncat</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GNU-GDB"><span class="nav-number">4.</span> <span class="nav-text">GNU GDB</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E5%B7%A7-Hook-amp-Patch"><span class="nav-number">5.</span> <span class="nav-text">技巧 Hook&amp;Patch</span></a></li></ol></div>
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#objdump"><span class="nav-number">1.</span> <span class="nav-text">objdump</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#readelf"><span class="nav-number">2.</span> <span class="nav-text">readelf</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ncat"><span class="nav-number">3.</span> <span class="nav-text">ncat</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GNU-GDB"><span class="nav-number">4.</span> <span class="nav-text">GNU GDB</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E5%B7%A7-Hook-amp-Patch"><span class="nav-number">5.</span> <span class="nav-text">技巧 Hook&amp;Patch</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#qira"><span class="nav-number">6.</span> <span class="nav-text">qira</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pwntools"><span class="nav-number">7.</span> <span class="nav-text">pwntools</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#nasm"><span class="nav-number">8.</span> <span class="nav-text">nasm</span></a></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -266,7 +266,7 @@
     
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          栈溢出
+          PWN学习之0x01必备工具介绍
         </h1>
 
         <div class="post-meta">
@@ -277,7 +277,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-08-23 16:49:01 / Modified: 21:57:00" itemprop="dateCreated datePublished" datetime="2020-08-23T16:49:01+08:00">2020-08-23</time>
+              <time title="Created: 2020-08-23 16:49:01 / Modified: 22:55:24" itemprop="dateCreated datePublished" datetime="2020-08-23T16:49:01+08:00">2020-08-23</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -290,7 +290,7 @@
             </span>
 
           
-            <span id="/2020/08/23/NTU%20STCS%202016%20Week3%20Stack%20Overflow/" class="post-meta-item leancloud_visitors" data-flag-title="栈溢出" title="Views">
+            <span id="/2020/08/23/NTU%20STCS%202016%20Week3%20Stack%20Overflow/" class="post-meta-item leancloud_visitors" data-flag-title="PWN学习之0x01必备工具介绍" title="Views">
               <span class="post-meta-item-icon">
                 <i class="far fa-eye"></i>
               </span>
@@ -319,7 +319,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <p>栈溢出(StackOverflow)</p>
+        <p>栈溢出(StackOverflow)入门工具介绍</p>
 <a id="more"></a>
 <h2 id="objdump"><a href="#objdump" class="headerlink" title="objdump"></a>objdump</h2><p>常用指令</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> objdump -T binary</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat /proc/`pidof binary`/maps</span></span><br></pre></td></tr></table></figure>
@@ -342,6 +342,18 @@
 <p>hook alarm by LD_PRELOAD</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// hook.c</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="title">alarm</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> seconds)</span></span>&#123;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, seconds);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> gcc hook.c -o hook.so -shared -fPIC -m32</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> LD_PRELOAD=./hook.so ./binary</span></span><br></pre></td></tr></table></figure>
+<p>LD_SHOW_AUXV</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> ncat -vc <span class="string">&#x27;LD_SHOW_AUXV=1 ./level2&#x27;</span> -kl 127.0.0.1 6666</span></span><br><span class="line">Ncat: Version 7.80 ( https://nmap.org/ncat )</span><br><span class="line">Ncat: Listening on 127.0.0.1:6666</span><br><span class="line">Ncat: Connection from 127.0.0.1.</span><br><span class="line">Ncat: Connection from 127.0.0.1:36108</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> nc 127.0.0.1 6666</span></span><br><span class="line">AT_SYSINFO:           0xf7f7ab40</span><br><span class="line">AT_SYSINFO_EHDR:      0xf7f7a000</span><br><span class="line">...</span><br><span class="line">AT_PAGESZ:            4096</span><br><span class="line">AT_CLKTCK:            100</span><br><span class="line">AT_PHDR:              0x8048034</span><br><span class="line">AT_PHENT:             32</span><br><span class="line">AT_PHNUM:             9</span><br><span class="line">AT_BASE:              0xf7f7b000 #librarybase</span><br><span class="line">AT_FLAGS:             0x0</span><br><span class="line">AT_ENTRY:             0x8048350</span><br><span class="line">...</span><br><span class="line">AT_SECURE:            0</span><br><span class="line">AT_RANDOM:            0xffd88bcb #stackout canary</span><br><span class="line">AT_HWCAP2:            0x0</span><br><span class="line">...</span><br><span class="line">AT_EXECFN:            /bin/sh</span><br><span class="line">AT_PLATFORM:          x86_64</span><br><span class="line">Input:</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="qira"><a href="#qira" class="headerlink" title="qira"></a><a target="_blank" rel="noopener" href="https://qira.me/">qira</a></h2><p>非常好用的gdb动态调试工具，部署略</p>
+<blockquote>
+<p>Ubuntu 14.04 and 16.04 supported out of the box.<br>18.04 is having a problem with building QEMU<br>See forked QEMU source at <a target="_blank" rel="noopener" href="https://github.com/geohot/qemu/tree/qira">https://github.com/geohot/qemu/tree/qira</a> to fix.</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/geohot/qira">使用方法</a><br>开启指令 python qira.py -s ./binary</p>
+<h2 id="pwntools"><a href="#pwntools" class="headerlink" title="pwntools"></a>pwntools</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install pwntools</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="http://docs.pwntools.com/en/stable/">Documentation</a></p>
+<h2 id="nasm"><a href="#nasm" class="headerlink" title="nasm"></a>nasm</h2><p>X86编译工具，编译shellcode使用</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nasm -felf32 shell.asm -o shell.o</span><br><span class="line">ld -melf_i386 shell.o -o shell</span><br><span class="line">objcopy -O binary shell.o shell.bin</span><br><span class="line">objdump -b binary -m i386 -D shell.bin</span><br></pre></td></tr></table></figure>
 
     </div>
 
