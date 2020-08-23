@@ -307,6 +307,7 @@
 
 
       
+    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -386,6 +387,26 @@
   
 
   
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.css">
+
+<script>
+NexT.utils.loadComments('#gitalk-container', () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '3a2a4aa52510cf9e2438',
+      clientSecret: '1eba3130fac216699ffb44519ed893bcabd1a75c',
+      repo        : 'https://github.com/DojoKuro/dojokuro.github.io',
+      owner       : 'DojoKuro',
+      admin       : ['DojoKuro'],
+      id          : 'c35aa3c2681bbecc231260283b45d43f',
+        language: '',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
 </body>
 </html>
