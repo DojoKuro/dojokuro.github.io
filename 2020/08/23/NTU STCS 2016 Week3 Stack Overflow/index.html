@@ -22,18 +22,22 @@
     var CONFIG = {"hostname":"dojokuro.xyz","root":"/","scheme":"Muse","version":"8.0.0-rc.5","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="categories">
-<meta property="og:url" content="http://dojokuro.xyz/categories/index.html">
+  <meta name="description" content="Stack Overflowobjdump 常用指令  12$ objdump -T binary$ cat &#x2F;proc&#x2F;&#96;pidof binary&#96;&#x2F;maps  readelf 分析elf binary header里的一些信息 readelf -a | grep STACK 看能否跑shellcode  12$ readelf -a .&#x2F;binary | grep STACK  GNU_ST">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Stack-Over-Flow">
+<meta property="og:url" content="http://dojokuro.xyz/2020/08/23/NTU%20STCS%202016%20Week3%20Stack%20Overflow/index.html">
 <meta property="og:site_name" content="DojoKuro&#39;s Blog">
+<meta property="og:description" content="Stack Overflowobjdump 常用指令  12$ objdump -T binary$ cat &#x2F;proc&#x2F;&#96;pidof binary&#96;&#x2F;maps  readelf 分析elf binary header里的一些信息 readelf -a | grep STACK 看能否跑shellcode  12$ readelf -a .&#x2F;binary | grep STACK  GNU_ST">
 <meta property="og:locale">
-<meta property="article:published_time" content="2020-08-23T11:48:49.000Z">
-<meta property="article:modified_time" content="2020-08-23T11:49:00.757Z">
+<meta property="article:published_time" content="2020-08-23T08:49:01.000Z">
+<meta property="article:modified_time" content="2020-08-23T12:53:34.069Z">
 <meta property="article:author" content="DojoKuro">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="pwn">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://dojokuro.xyz/categories/">
+<link rel="canonical" href="http://dojokuro.xyz/2020/08/23/NTU%20STCS%202016%20Week3%20Stack%20Overflow/">
 
 
 <script class="page-configurations">
@@ -41,13 +45,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-Hans'
   };
 </script>
 
-  <title>categories | DojoKuro's Blog
-</title>
+  <title>Stack-Over-Flow | DojoKuro's Blog</title>
   
 
 
@@ -162,7 +165,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -174,6 +177,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Stack-Overflow"><span class="nav-number">1.</span> <span class="nav-text">Stack Overflow</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#objdump"><span class="nav-number">1.1.</span> <span class="nav-text">objdump</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#readelf"><span class="nav-number">1.2.</span> <span class="nav-text">readelf</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ncat"><span class="nav-number">1.3.</span> <span class="nav-text">ncat</span></a></li></ol></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -237,53 +241,141 @@
 </noscript>
 
 
-    <div class="main-inner page posts-expand">
+    <div class="main-inner post posts-expand">
       
-  
-  
 
       
 
     
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://dojokuro.xyz/2020/08/23/NTU%20STCS%202016%20Week3%20Stack%20Overflow/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.png">
+      <meta itemprop="name" content="DojoKuro">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DojoKuro's Blog">
+    </span>
+
     
     
-    <div class="post-block" lang="zh-Hans">
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Stack-Over-Flow
+        </h1>
 
-<h1 class="post-title" itemprop="name headline">categories
-</h1>
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
 
-<div class="post-meta">
+              <time title="Created: 2020-08-23 16:49:01 / Modified: 20:53:34" itemprop="dateCreated datePublished" datetime="2020-08-23T16:49:01+08:00">2020-08-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2020/08/23/NTU%20STCS%202016%20Week3%20Stack%20Overflow/" class="post-meta-item leancloud_visitors" data-flag-title="Stack-Over-Flow" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="far fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2020/08/23/NTU%20STCS%202016%20Week3%20Stack%20Overflow/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/08/23/NTU%20STCS%202016%20Week3%20Stack%20Overflow/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
   
 
-</div>
+        </div>
+      </header>
 
-</header>
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <a id="more"></a>
+<h1 id="Stack-Overflow"><a href="#Stack-Overflow" class="headerlink" title="Stack Overflow"></a>Stack Overflow</h1><h2 id="objdump"><a href="#objdump" class="headerlink" title="objdump"></a>objdump</h2><ul>
+<li>常用指令</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> objdump -T binary</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat /proc/`pidof binary`/maps</span></span><br></pre></td></tr></table></figure>
 
-      
-      
-      
-      <div class="post-body">
-          <div class="category-all-page">
-  <div class="category-all-title">
-    1 category in total
-  </div>
-  <div class="category-all">
-    <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/CTF/">CTF</a><span class="category-list-count">1</span></li></ul>
-  </div>
-</div>
+<h2 id="readelf"><a href="#readelf" class="headerlink" title="readelf"></a>readelf</h2><ul>
+<li>分析elf binary header里的一些信息</li>
+<li>readelf -a | grep STACK 看能否跑shellcode</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> readelf -a ./binary | grep STACK</span></span><br><span class="line">  GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RW  0x10</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>trick</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> readelf -a ./binary | grep <span class="string">&#x27; system@&#x27;</span></span></span><br><span class="line"><span class="meta">$</span><span class="bash"> ldd binary</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>trick:execstack</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> execstack --h</span></span><br><span class="line">Usage: execstack [OPTION...]</span><br><span class="line">execstack -- program to query or set executable stack flag</span><br><span class="line"></span><br><span class="line">  -c, --clear-execstack      Clear executable stack flag bit</span><br><span class="line">  -q, --query                Query executable stack flag bit</span><br><span class="line">  -s, --set-execstack        Set executable stack flag bit</span><br><span class="line">  -?, --help                 Give this help list</span><br><span class="line">      --usage                Give a short usage message</span><br><span class="line">  -V, --version              Print program version</span><br><span class="line"></span><br><span class="line">Report bugs to &lt;jakub@redhat.com&gt;.</span><br></pre></td></tr></table></figure>
+
+<h2 id="ncat"><a href="#ncat" class="headerlink" title="ncat"></a>ncat</h2><ul>
+<li>建立local service环境，因为你不会再无法debug的情况下直接对remote做事</li>
+<li>ncat -vc ./binary -kl 127.0.0.1 8888</li>
+<li>ncat -vc ‘strace -e trace=read ./binary’ -kl ::1 4000</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CTF/" rel="tag"># CTF</a>
+              <a href="/tags/pwn/" rel="tag"># pwn</a>
+          </div>
 
         
-      </div>
-      
-      
-      
-    </div>
-    
 
-    
-    
-    
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/08/23/hello-world/" rel="next" title="Hello World">
+                  Hello World <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+  
+  
+  
+
 
 
       
