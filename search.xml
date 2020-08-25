@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>NTU STCS 2016学习笔记 0x01 Intro</title>
-    <url>/2020/08/23/NTU%20STCS%202016%20Week3%20Stack%20Overflow/</url>
+    <url>/2020/08/23/ntu-stcs-2016-w3/</url>
     <content><![CDATA[<p>栈溢出(StackOverflow)入门工具介绍</p>
 <a id="more"></a>
 
@@ -86,6 +86,25 @@
 
 <p>eax赋值</p>
 <figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">jDX4C</span><br><span class="line"><span class="number">0</span>:  <span class="number">6</span>a <span class="number">44</span>       push  <span class="number">0x44</span></span><br><span class="line"><span class="number">2</span>:  <span class="number">58</span>          pop   eax</span><br><span class="line"><span class="number">3</span>:  <span class="number">34</span> <span class="number">43</span>       <span class="keyword">xor</span>   al,<span class="number">0x43</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>CTF</category>
+      </categories>
+      <tags>
+        <tag>CTF</tag>
+        <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ntu_stcs_2016_w4</title>
+    <url>/2020/08/25/ntu-stcs-2016-w4/</url>
+    <content><![CDATA[<p><strong>week4 shellcode rop</strong></p>
+<a id="more"></a>
+
+<h2 id="gdbserver"><a href="#gdbserver" class="headerlink" title="gdbserver"></a>gdbserver</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># in bash commandline</span></span><br><span class="line">gdbserver 127.0.0.1:4000 ./binary <span class="comment">#break在entrypoint</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># in gdb commandline</span></span><br><span class="line">gdb ./binary</span><br><span class="line">$ target remote 127.0.0.1:4000</span><br><span class="line">$ <span class="built_in">continue</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 搭配ncat</span></span><br><span class="line">ncat -vc <span class="string">&#x27;gdbserver 127.0.0.1:4000 .binary&#x27;</span> -kl 127.0.0.1 5000</span><br></pre></td></tr></table></figure>
+
+<p><strong>trick</strong><br>使用gdbscript attach pid</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># .gdbinit</span></span><br><span class="line"><span class="built_in">set</span> disassembly-flavor intel</span><br><span class="line">define at</span><br><span class="line">  shell <span class="built_in">echo</span> attach $(pidof -s <span class="variable">$arg0</span>) &gt; /tmp/foo.gdb</span><br><span class="line">  <span class="built_in">source</span> /tmp/foo.gdb</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>CTF</category>
