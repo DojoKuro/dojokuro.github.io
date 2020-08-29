@@ -22,29 +22,37 @@
     var CONFIG = {"hostname":"dojokuro.xyz","root":"/","scheme":"Muse","version":"8.0.0-rc.5","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="DojoKuro&#39;s Blog">
-<meta property="og:url" content="http://dojokuro.xyz/index.html">
+  <meta name="description" content="week5 rop from ret2text to ret2lib">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NTU STCS 2016学习笔记 0x03 ROP2">
+<meta property="og:url" content="http://dojokuro.xyz/2020/08/29/ntu-stcs-2016-w5/index.html">
 <meta property="og:site_name" content="DojoKuro&#39;s Blog">
+<meta property="og:description" content="week5 rop from ret2text to ret2lib">
 <meta property="og:locale">
+<meta property="og:image" content="http://dojokuro.xyz/2020/08/29/ntu-stcs-2016-w5/w5-ropcall.png">
+<meta property="article:published_time" content="2020-08-29T08:31:45.000Z">
+<meta property="article:modified_time" content="2020-08-29T10:01:02.646Z">
 <meta property="article:author" content="DojoKuro">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="pwn">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://dojokuro.xyz/2020/08/29/ntu-stcs-2016-w5/w5-ropcall.png">
 
 
-<link rel="canonical" href="http://dojokuro.xyz/">
+<link rel="canonical" href="http://dojokuro.xyz/2020/08/29/ntu-stcs-2016-w5/">
 
 
 <script class="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-Hans'
   };
 </script>
 
-  <title>DojoKuro's Blog</title>
+  <title>NTU STCS 2016学习笔记 0x03 ROP2 | DojoKuro's Blog</title>
   
 
 
@@ -159,7 +167,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -171,6 +179,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#call%E7%A8%8B%E5%BA%8F%E9%87%8C%E6%9C%89%E7%9A%84function"><span class="nav-number">1.</span> <span class="nav-text">call程序里有的function</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8libc%E9%87%8C%E7%9A%84function"><span class="nav-number">2.</span> <span class="nav-text">使用libc里的function</span></a></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -234,11 +243,12 @@
 </noscript>
 
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
       
 
       
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
@@ -257,10 +267,9 @@
     
     
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/08/29/ntu-stcs-2016-w5/" class="post-title-link" itemprop="url">NTU STCS 2016学习笔记 0x03 ROP2</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          NTU STCS 2016学习笔记 0x03 ROP2
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -312,16 +321,56 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><strong>week5 rop from ret2text to ret2lib</strong></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/08/29/ntu-stcs-2016-w5/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
+        <p><strong>week5 rop from ret2text to ret2lib</strong></p>
+<a id="more"></a>
+
+<h1 id="call程序里有的function"><a href="#call程序里有的function" class="headerlink" title="call程序里有的function"></a>call程序里有的function</h1><ul>
+<li><em>跳.plt entry</em></li>
+<li><em>函数参数直接放到接下来的stack</em></li>
+<li><em>用pop-ret处理用过的参数</em></li>
+</ul>
+<p><strong>ROP call function</strong></p>
+<p><img src="w5-ropcall.png" alt="w5-ropcall"></p>
+<h1 id="使用libc里的function"><a href="#使用libc里的function" class="headerlink" title="使用libc里的function"></a>使用libc里的function</h1><ul>
+<li><em>printf,gets,puts等函数所在位置:libc.so.6</em></li>
+<li><em>直接用rop call libc 的system</em></li>
+<li><em>用条件</em><ul>
+<li><em>libc版本或者fuction的offset已知</em></li>
+<li><em>ASLR开启情况</em></li>
+</ul>
+</li>
+</ul>
+<p><strong>Dynamically Linded Elf 动态链接库相关操作</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取libc路径</span></span><br><span class="line">ldd ./binary</span><br><span class="line"><span class="comment"># 查看libc中的相对位置</span></span><br><span class="line"><span class="comment"># trick 使用 | grep &#x27; system@&#x27;来查看想找的symbol</span></span><br><span class="line">readelf -s /lib32/libc.so.6 | grep <span class="string">&#x27; system@&#x27;</span></span><br><span class="line"><span class="comment"># 指定加载的libc位置</span></span><br><span class="line">LD_LIBRARY_PATH=./path/to/libc</span><br></pre></td></tr></table></figure>
+
+<p><strong>Function Lazy Binding</strong></p>
+<p><em>library在binary执行时才加载，第一次call function时解析函数位置填入.got.plt</em></p>
+<p><strong>推算libc base addr</strong></p>
+<ul>
+<li><em>函数在libc的相对位置不变</em><ul>
+<li><em>使用readelf得知__libc_start_main和system在libc的相对位置</em></li>
+</ul>
+</li>
+<li><em>使用任意输入函数print出__libc-start_main的.got内容，推算system在内存的addr</em><ul>
+<li><em>用rop构造puts(__libc_start_main@got)</em></li>
+<li>*要leak的got entry,对应的function必须已经被call过</li>
+</ul>
+</li>
+<li><em>前提：已有或已知远端libc.so.6版本</em></li>
+</ul>
+<p><strong>Libc Data Base</strong></p>
+<ul>
+<li><p><em>已知两个function的address时可以在libcdb里找对应的版本</em></p>
+<ul>
+<li><em><del>✘网站：libcdb.com:the libc data base</del></em></li>
+<li><em>✘网站：<a target="_blank" rel="noopener" href="https://libc.nullbyte.cat/">libc.nullbyte.cat</a></em></li>
+</ul>
+</li>
+<li><p><em>✔使用<a target="_blank" rel="noopener" href="https://github.com/lieanu/LibcSearcher">LibcSearcher</a></em></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment">#第二个参数，为已泄露的实际地址,或最后12位(比如：d90)，int类型</span></span><br><span class="line">obj = LibcSearcher(<span class="string">&quot;fgets&quot;</span>, <span class="number">0X7ff39014bd90</span>)</span><br><span class="line"></span><br><span class="line">obj.dump(<span class="string">&quot;system&quot;</span>)        <span class="comment">#system 偏移</span></span><br><span class="line">obj.dump(<span class="string">&quot;str_bin_sh&quot;</span>)    <span class="comment">#/bin/sh 偏移</span></span><br><span class="line">obj.dump(<span class="string">&quot;__libc_start_main_ret&quot;</span>)  </span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>
     </div>
 
     
@@ -329,218 +378,22 @@
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/CTF/" rel="tag"># CTF</a>
+              <a href="/tags/pwn/" rel="tag"># pwn</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://dojokuro.xyz/2020/08/25/ntu-stcs-2016-w4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="DojoKuro">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="DojoKuro's Blog">
-    </span>
-
-    
-    
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/08/25/ntu-stcs-2016-w4/" class="post-title-link" itemprop="url">NTU STCS 2016学习笔记 0x02 ROP</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-08-25 16:46:26" itemprop="dateCreated datePublished" datetime="2020-08-25T16:46:26+08:00">2020-08-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-08-29 16:40:45" itemprop="dateModified" datetime="2020-08-29T16:40:45+08:00">2020-08-29</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/08/25/ntu-stcs-2016-w4/" class="post-meta-item leancloud_visitors" data-flag-title="NTU STCS 2016学习笔记 0x02 ROP" title="Views">
-              <span class="post-meta-item-icon">
-                <i class="far fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine: </span>
-    
-    <a title="valine" href="/2020/08/25/ntu-stcs-2016-w4/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/08/25/ntu-stcs-2016-w4/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p><strong>week4 shellcode rop</strong></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/08/25/ntu-stcs-2016-w4/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://dojokuro.xyz/2020/08/23/ntu-stcs-2016-w3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/uploads/avatar.png">
-      <meta itemprop="name" content="DojoKuro">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="DojoKuro's Blog">
-    </span>
-
-    
-    
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/08/23/ntu-stcs-2016-w3/" class="post-title-link" itemprop="url">NTU STCS 2016学习笔记 0x01 Intro</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2020-08-23 16:49:01" itemprop="dateCreated datePublished" datetime="2020-08-23T16:49:01+08:00">2020-08-23</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-08-26 16:01:59" itemprop="dateModified" datetime="2020-08-26T16:01:59+08:00">2020-08-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CTF/" itemprop="url" rel="index"><span itemprop="name">CTF</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2020/08/23/ntu-stcs-2016-w3/" class="post-meta-item leancloud_visitors" data-flag-title="NTU STCS 2016学习笔记 0x01 Intro" title="Views">
-              <span class="post-meta-item-icon">
-                <i class="far fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine: </span>
-    
-    <a title="valine" href="/2020/08/23/ntu-stcs-2016-w3/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/08/23/ntu-stcs-2016-w3/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>栈溢出(StackOverflow)入门工具介绍</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/08/23/ntu-stcs-2016-w3/#more" rel="contents">
-                Read more &raquo;
-              </a>
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/08/25/ntu-stcs-2016-w4/" rel="prev" title="NTU STCS 2016学习笔记 0x02 ROP">
+                  <i class="fa fa-chevron-left"></i> NTU STCS 2016学习笔记 0x02 ROP
+                </a>
             </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+            <div class="post-nav-item">
+            </div>
+          </div>
     </footer>
   </article>
   
@@ -548,11 +401,9 @@
   
 
 
-  
-
-
 
       
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
