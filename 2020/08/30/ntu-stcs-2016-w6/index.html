@@ -30,12 +30,15 @@
 <meta property="og:site_name" content="DojoKuro&#39;s Blog">
 <meta property="og:description" content="format string vulnerable exploit">
 <meta property="og:locale">
+<meta property="og:image" content="http://dojokuro.xyz/2020/08/30/ntu-stcs-2016-w6/w6-fmt-stacktrace.png">
+<meta property="og:image" content="http://dojokuro.xyz/2020/08/30/ntu-stcs-2016-w6/w6-fmt-stackguard.png">
 <meta property="article:published_time" content="2020-08-30T04:22:52.000Z">
-<meta property="article:modified_time" content="2020-08-30T04:25:39.432Z">
+<meta property="article:modified_time" content="2020-08-30T09:52:13.953Z">
 <meta property="article:author" content="DojoKuro">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="pwn">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://dojokuro.xyz/2020/08/30/ntu-stcs-2016-w6/w6-fmt-stacktrace.png">
 
 
 <link rel="canonical" href="http://dojokuro.xyz/2020/08/30/ntu-stcs-2016-w6/">
@@ -166,7 +169,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -178,6 +181,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Format-String"><span class="nav-number">1.</span> <span class="nav-text">Format String</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Format-String-Vulnerablility"><span class="nav-number">1.1.</span> <span class="nav-text">Format String Vulnerablility</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fmt%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="nav-number">1.2.</span> <span class="nav-text">fmt使用方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fmt%E6%BC%8F%E6%B4%9E%E6%88%90%E5%9B%A0"><span class="nav-number">1.3.</span> <span class="nav-text">fmt漏洞成因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#leak-libc-base"><span class="nav-number">1.4.</span> <span class="nav-text">leak libc base</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#stackguard-CANARY"><span class="nav-number">2.</span> <span class="nav-text">stackguard(CANARY)</span></a></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -277,7 +281,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-08-30 12:22:52 / Modified: 12:25:39" itemprop="dateCreated datePublished" datetime="2020-08-30T12:22:52+08:00">2020-08-30</time>
+              <time title="Created: 2020-08-30 12:22:52 / Modified: 17:52:13" itemprop="dateCreated datePublished" datetime="2020-08-30T12:22:52+08:00">2020-08-30</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -321,6 +325,47 @@
     <div class="post-body" itemprop="articleBody">
         <p><strong>format string vulnerable exploit</strong></p>
 <a id="more"></a>
+
+<h1 id="Format-String"><a href="#Format-String" class="headerlink" title="Format String"></a>Format String</h1><ul>
+<li><em>在输出火字符串处理函数中用来表示输出的字符串格式</em></li>
+<li><em>在以下的”%s %d”即为format string</em><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%s %d\n&quot;</span>, str, a);</span><br><span class="line"><span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;%s %d\n&quot;</span>, str, a);</span><br><span class="line"><span class="built_in">sprintf</span>(buffer, <span class="string">&quot;%s %d\n&quot;</span>, str, a);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="Format-String-Vulnerablility"><a href="#Format-String-Vulnerablility" class="headerlink" title="Format String Vulnerablility"></a>Format String Vulnerablility</h2><ul>
+<li><em>错误的使用方式，直接将使用者的输入作为fmt使用</em></li>
+<li><em>将printf(“%s”, str)，写成gets(str);printf(str);</em></li>
+<li><em>此类错误不易发现，因为如果没有测试特殊input执行结果不变</em></li>
+</ul>
+<h2 id="fmt使用方式"><a href="#fmt使用方式" class="headerlink" title="fmt使用方式"></a>fmt使用方式</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%2$*1$d&quot;</span>, width, num);</span><br></pre></td></tr></table></figure>
+<ul>
+<li><em>%2$制定要以%d输出的是第几个参数</em></li>
+<li><em>1$制定要作为输出的长度是第几个参数</em></li>
+<li><em>width = 10,num = 5时相当于printf(“%10d”, 5)</em><br><img src="w6-fmt-stacktrace.png" alt="w6-fmt-stacktrace"></li>
+</ul>
+<p><strong>例子:</strong><a href="fmt1">fmt1</a><br>source code</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  setvbuf(<span class="built_in">stdout</span>,<span class="number">0</span>,_IONBF,<span class="number">0</span>);</span><br><span class="line">  alarm(<span class="number">180</span>);</span><br><span class="line">  <span class="keyword">char</span> str[<span class="number">100</span>];</span><br><span class="line">  <span class="keyword">while</span>(gets(str)) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(str);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="fmt漏洞成因"><a href="#fmt漏洞成因" class="headerlink" title="fmt漏洞成因"></a>fmt漏洞成因</h2><ul>
+<li><em>format string可以被攻击者的输入人以控制，而printf本身不会检查后面有几个参数</em></li>
+<li><em>使用%x会造成stack上的info leak</em></li>
+<li><em>使用$控制要leak的位置</em></li>
+</ul>
+<p><strong>PS.：</strong> <em>x64的程序使用%lx</em></p>
+<h2 id="leak-libc-base"><a href="#leak-libc-base" class="headerlink" title="leak libc base"></a>leak libc base</h2><ul>
+<li><em>程序执行起点为_start，把main作为参数传入__libc_start_main</em></li>
+<li><em>__libc_start_main会先完成初始化造作，之后call main函数</em></li>
+<li><em>main的ret addr指向libc内部，且存放在stack上的值可以用%x泄露出来</em></li>
+<li><em>leak出来的位数ec5和return会libc里的位置一致，但由于ASLR的关系使得高位随机</em></li>
+<li><em>会return的位置会在call exit前面一些</em><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ./fmt1</span><br><span class="line">%21<span class="variable">$lx</span></span><br><span class="line">7f0438b721e3</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h1 id="stackguard-CANARY"><a href="#stackguard-CANARY" class="headerlink" title="stackguard(CANARY)"></a>stackguard(CANARY)</h1><ul>
+<li>编译器对stack overflow的一种保护机制</li>
+<li>在call函数时在stack上放的值</li>
+<li>函数return时先检查CANARY是否被修改<br><img src="w6-fmt-stackguard.png" alt="w6-fmt-stackguard"></li>
+</ul>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>
     </div>
 
