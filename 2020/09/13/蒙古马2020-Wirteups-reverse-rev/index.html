@@ -32,10 +32,10 @@
 <meta property="og:locale">
 <meta property="og:image" content="http://dojokuro.xyz/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/ida_main.png">
 <meta property="og:image" content="http://dojokuro.xyz/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/ida_main_0.png">
-<meta property="og:image" content="http://dojokuro.xyz/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/ida_b64encode.png">
+<meta property="og:image" content="http://dojokuro.xyz/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/ida_base64encode.png">
 <meta property="og:image" content="http://dojokuro.xyz/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/ida_str2.png">
 <meta property="article:published_time" content="2020-09-13T02:45:06.000Z">
-<meta property="article:modified_time" content="2020-09-13T03:25:41.423Z">
+<meta property="article:modified_time" content="2020-09-13T03:28:06.599Z">
 <meta property="article:author" content="DojoKuro">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="reverse">
@@ -284,7 +284,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-09-13 10:45:06 / Modified: 11:25:41" itemprop="dateCreated datePublished" datetime="2020-09-13T10:45:06+08:00">2020-09-13</time>
+              <time title="Created: 2020-09-13 10:45:06 / Modified: 11:28:06" itemprop="dateCreated datePublished" datetime="2020-09-13T10:45:06+08:00">2020-09-13</time>
             </span>
 
           
@@ -339,7 +339,7 @@
 <p><img src="ida_main.png" alt="ida_main"></p>
 <p><img src="ida_main_0.png" alt="ida_main_0"></p>
 <p>查看关键function</p>
-<p><img src="ida_b64encode.png" alt="ida_b64encode"></p>
+<p><img src="ida_base64encode.png" alt="ida_b64encode"></p>
 <p>显然是base64加密，再将加密结果strcpy到Dest上，再经过一道加密算法把Dest的每一byte加j，再与Str2比对。</p>
 <p>看一下Str2的值：</p>
 <p><img src="ida_str2.png" alt="ida_str2"></p>

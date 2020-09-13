@@ -384,7 +384,7 @@
 <p><img src="ida_main.png" alt="ida_main"></p>
 <p><img src="ida_main_0.png" alt="ida_main_0"></p>
 <p>查看关键function</p>
-<p><img src="ida_b64encode.png" alt="ida_b64encode"></p>
+<p><img src="ida_base64encode.png" alt="ida_b64encode"></p>
 <p>显然是base64加密，再将加密结果strcpy到Dest上，再经过一道加密算法把Dest的每一byte加j，再与Str2比对。</p>
 <p>看一下Str2的值：</p>
 <p><img src="ida_str2.png" alt="ida_str2"></p>
