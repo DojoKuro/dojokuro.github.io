@@ -23,18 +23,28 @@
     var CONFIG = {"hostname":"dojokuro.xyz","root":"/","scheme":"Muse","version":"8.0.0-rc.5","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="tags">
-<meta property="og:url" content="http://dojokuro.xyz/tags/index.html">
+  <meta name="description" content="题目：rev 程序下载:rev  hint:yyyymmdd">
+<meta property="og:type" content="article">
+<meta property="og:title" content="蒙古马2020 Wirteups:reverse-rev">
+<meta property="og:url" content="http://dojokuro.xyz/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/index.html">
 <meta property="og:site_name" content="DojoKuro&#39;s Blog">
+<meta property="og:description" content="题目：rev 程序下载:rev  hint:yyyymmdd">
 <meta property="og:locale">
-<meta property="article:published_time" content="2020-08-23T11:47:53.000Z">
-<meta property="article:modified_time" content="2020-08-23T11:48:13.109Z">
+<meta property="og:image" content="http://dojokuro.xyz/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/ida_main.png">
+<meta property="og:image" content="http://dojokuro.xyz/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/ida_main_0.png">
+<meta property="og:image" content="http://dojokuro.xyz/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/ida_b64encode.png">
+<meta property="og:image" content="http://dojokuro.xyz/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/ida_str2.png">
+<meta property="article:published_time" content="2020-09-13T02:45:06.000Z">
+<meta property="article:modified_time" content="2020-09-13T03:25:41.423Z">
 <meta property="article:author" content="DojoKuro">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="reverse">
+<meta property="article:tag" content="蒙古马2020">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://dojokuro.xyz/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/ida_main.png">
 
 
-<link rel="canonical" href="http://dojokuro.xyz/tags/">
+<link rel="canonical" href="http://dojokuro.xyz/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/">
 
 
 <script class="page-configurations">
@@ -42,13 +52,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-Hans'
   };
 </script>
 
-  <title>tags | DojoKuro's Blog
-</title>
+  <title>蒙古马2020 Wirteups:reverse-rev | DojoKuro's Blog</title>
   
 
 
@@ -163,7 +172,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -175,6 +184,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0x00-%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3%E5%8E%8B%E7%BC%A9%E5%8C%85"><span class="nav-number">1.</span> <span class="nav-text">0x00 暴力破解压缩包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x01-%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">0x01 程序分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0x02-python%E8%84%9A%E6%9C%AC"><span class="nav-number">3.</span> <span class="nav-text">0x02 python脚本</span></a></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -238,53 +248,138 @@
 </noscript>
 
 
-    <div class="main-inner page posts-expand">
+    <div class="main-inner post posts-expand">
       
-  
-  
 
       
 
     
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://dojokuro.xyz/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/images/avatar.png">
+      <meta itemprop="name" content="DojoKuro">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DojoKuro's Blog">
+    </span>
+
     
     
-    <div class="post-block" lang="zh-Hans">
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          蒙古马2020 Wirteups:reverse-rev
+        </h1>
 
-<h1 class="post-title" itemprop="name headline">tags
-</h1>
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
 
-<div class="post-meta">
+              <time title="Created: 2020-09-13 10:45:06 / Modified: 11:25:41" itemprop="dateCreated datePublished" datetime="2020-09-13T10:45:06+08:00">2020-09-13</time>
+            </span>
+
+          
+            <span id="/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/" class="post-meta-item leancloud_visitors" data-flag-title="蒙古马2020 Wirteups:reverse-rev" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="far fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
   
 
-</div>
+        </div>
+      </header>
 
-</header>
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p><strong>题目：rev</strong></p>
+<p>程序下载:<a href="rev.rar">rev</a></p>
+<blockquote>
+<p>hint:yyyymmdd</p>
+</blockquote>
+<a id="more"></a>
 
-      
-      
-      
-      <div class="post-body">
-          <div class="tag-cloud">
-  <div class="tag-cloud-title">
-    4 tags in total
-  </div>
-  <div class="tag-cloud-tags">
-    <a href="/tags/CTF/" style="font-size: 30px;" class="tag-cloud-10">CTF</a> <a href="/tags/pwn/" style="font-size: 21px;" class="tag-cloud-5">pwn</a> <a href="/tags/reverse/" style="font-size: 12px;" class="tag-cloud-0">reverse</a> <a href="/tags/%E8%92%99%E5%8F%A4%E9%A9%AC2020/" style="font-size: 12px;" class="tag-cloud-0">蒙古马2020</a>
-  </div>
-</div>
+<h1 id="0x00-暴力破解压缩包"><a href="#0x00-暴力破解压缩包" class="headerlink" title="0x00 暴力破解压缩包"></a>0x00 暴力破解压缩包</h1><p>根据提示yyyymmdd可知解压密码为8位年份，暴力破解得到解压密码</p>
+<blockquote>
+<p>20200601</p>
+</blockquote>
+<h1 id="0x01-程序分析"><a href="#0x01-程序分析" class="headerlink" title="0x01 程序分析"></a>0x01 程序分析</h1><p>解压程序看一下：</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rev.exe: PE32 executable (console) Intel <span class="number">80386</span>, for <span class="keyword">MS</span> <span class="title">Windows</span></span><br></pre></td></tr></table></figure>
+
+<p>我的环境是ubuntu，wine运行发现少两个dll文件，导入运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wine rev.exe</span><br><span class="line">please enter the flag:xxx <span class="comment">#输入xxx</span></span><br><span class="line">wrong flag!</span><br></pre></td></tr></table></figure>
+
+<p><strong>IDA分析</strong></p>
+<p>看到_main跳转到_main_0，直接跟进F5看伪代码</p>
+<p><img src="ida_main.png" alt="ida_main"></p>
+<p><img src="ida_main_0.png" alt="ida_main_0"></p>
+<p>查看关键function</p>
+<p><img src="ida_b64encode.png" alt="ida_b64encode"></p>
+<p>显然是base64加密，再将加密结果strcpy到Dest上，再经过一道加密算法把Dest的每一byte加j，再与Str2比对。</p>
+<p>看一下Str2的值：</p>
+<p><img src="ida_str2.png" alt="ida_str2"></p>
+<p><strong>注意：</strong> 这里’\x84’不能被解析所以Str2的长度应为20。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Str2 = <span class="string">&#x27;Znzk^8zuUMLvndT\x84vBOP&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="0x02-python脚本"><a href="#0x02-python脚本" class="headerlink" title="0x02 python脚本"></a>0x02 python脚本</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line">enc = <span class="string">&#x27;Znzk^8zuUMLvndT\x84vBOP&#x27;</span></span><br><span class="line">tmp = <span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(enc)):</span><br><span class="line">     tmp+=<span class="string">&#x27;&#x27;</span>.join(chr(ord(enc[i])-i))</span><br><span class="line">flag = base64.b64decode(tmp)</span><br><span class="line"><span class="keyword">print</span> flag</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ./exp.py</span><br><span class="line">flag&#123;g00dman</span><br></pre></td></tr></table></figure>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CTF/" rel="tag"># CTF</a>
+              <a href="/tags/reverse/" rel="tag"># reverse</a>
+              <a href="/tags/%E8%92%99%E5%8F%A4%E9%A9%AC2020/" rel="tag"># 蒙古马2020</a>
+          </div>
 
         
-      </div>
-      
-      
-      
-    </div>
-    
 
-    
-    
-    
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/08/30/ntu-stcs-2016-w6/" rel="prev" title="NTU STCS 2016学习笔记 0x04 Format String">
+                  <i class="fa fa-chevron-left"></i> NTU STCS 2016学习笔记 0x04 Format String
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+  
+  
+  
+
 
 
       

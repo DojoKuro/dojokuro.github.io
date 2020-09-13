@@ -359,4 +359,46 @@
         <tag>pwn</tag>
       </tags>
   </entry>
+  <entry>
+    <title>蒙古马2020 Wirteups:reverse-rev</title>
+    <url>/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/</url>
+    <content><![CDATA[<p><strong>题目：rev</strong></p>
+<p>程序下载:<a href="rev.rar">rev</a></p>
+<blockquote>
+<p>hint:yyyymmdd</p>
+</blockquote>
+<a id="more"></a>
+
+<h1 id="0x00-暴力破解压缩包"><a href="#0x00-暴力破解压缩包" class="headerlink" title="0x00 暴力破解压缩包"></a>0x00 暴力破解压缩包</h1><p>根据提示yyyymmdd可知解压密码为8位年份，暴力破解得到解压密码</p>
+<blockquote>
+<p>20200601</p>
+</blockquote>
+<h1 id="0x01-程序分析"><a href="#0x01-程序分析" class="headerlink" title="0x01 程序分析"></a>0x01 程序分析</h1><p>解压程序看一下：</p>
+<figure class="highlight crmsh"><table><tr><td class="code"><pre><span class="line">rev.exe: PE32 executable (console) Intel <span class="number">80386</span>, for <span class="keyword">MS</span> <span class="title">Windows</span></span><br></pre></td></tr></table></figure>
+
+<p>我的环境是ubuntu，wine运行发现少两个dll文件，导入运行</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wine rev.exe</span><br><span class="line">please enter the flag:xxx <span class="comment">#输入xxx</span></span><br><span class="line">wrong flag!</span><br></pre></td></tr></table></figure>
+
+<p><strong>IDA分析</strong></p>
+<p>看到_main跳转到_main_0，直接跟进F5看伪代码</p>
+<p><img src="ida_main.png" alt="ida_main"></p>
+<p><img src="ida_main_0.png" alt="ida_main_0"></p>
+<p>查看关键function</p>
+<p><img src="ida_b64encode.png" alt="ida_b64encode"></p>
+<p>显然是base64加密，再将加密结果strcpy到Dest上，再经过一道加密算法把Dest的每一byte加j，再与Str2比对。</p>
+<p>看一下Str2的值：</p>
+<p><img src="ida_str2.png" alt="ida_str2"></p>
+<p><strong>注意：</strong> 这里’\x84’不能被解析所以Str2的长度应为20。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">Str2 = <span class="string">&#x27;Znzk^8zuUMLvndT\x84vBOP&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="0x02-python脚本"><a href="#0x02-python脚本" class="headerlink" title="0x02 python脚本"></a>0x02 python脚本</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line">enc = <span class="string">&#x27;Znzk^8zuUMLvndT\x84vBOP&#x27;</span></span><br><span class="line">tmp = <span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(enc)):</span><br><span class="line">     tmp+=<span class="string">&#x27;&#x27;</span>.join(chr(ord(enc[i])-i))</span><br><span class="line">flag = base64.b64decode(tmp)</span><br><span class="line"><span class="keyword">print</span> flag</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ ./exp.py</span><br><span class="line">flag&#123;g00dman</span><br></pre></td></tr></table></figure>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
+      <tags>
+        <tag>CTF</tag>
+        <tag>reverse</tag>
+        <tag>蒙古马2020</tag>
+      </tags>
+  </entry>
 </search>
