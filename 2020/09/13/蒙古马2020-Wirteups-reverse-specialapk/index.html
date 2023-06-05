@@ -1,0 +1,188 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>蒙古马2020 Wirteups:reverse-specialapk | Kur0's Blog</title><meta name="keywords" content="reverse,writeup"><meta name="author" content="Kur0"><meta name="copyright" content="Kur0"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="题目：specialapk 程序下载:specialapk">
+<meta property="og:type" content="article">
+<meta property="og:title" content="蒙古马2020 Wirteups:reverse-specialapk">
+<meta property="og:url" content="https://blog.dojokuro.xyz/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-specialapk/index.html">
+<meta property="og:site_name" content="Kur0&#39;s Blog">
+<meta property="og:description" content="题目：specialapk 程序下载:specialapk">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://blog.dojokuro.xyz/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-specialapk/cover.jpg">
+<meta property="article:published_time" content="2020-09-13T06:05:06.000Z">
+<meta property="article:modified_time" content="2023-06-05T08:05:27.620Z">
+<meta property="article:author" content="Kur0">
+<meta property="article:tag" content="reverse">
+<meta property="article:tag" content="writeup">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.dojokuro.xyz/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-specialapk/cover.jpg"><link rel="shortcut icon" href="/uploads/image/favicon.png"><link rel="canonical" href="https://blog.dojokuro.xyz/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-specialapk/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":200,"languages":{"author":"作者: Kur0","link":"链接: ","source":"来源: Kur0's Blog","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '蒙古马2020 Wirteups:reverse-specialapk',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2023-06-05 16:05:27'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/uploads/images/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-specialapk/cover.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Kur0's Blog</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">蒙古马2020 Wirteups:reverse-specialapk</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-09-13T06:05:06.000Z" title="发表于 2020-09-13 14:05:06">2020-09-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-06-05T08:05:27.620Z" title="更新于 2023-06-05 16:05:27">2023-06-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/writeups/">writeups</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p><strong>题目：specialapk</strong></p>
+<p>程序下载:<a href="special_apk.zip">specialapk</a></p>
+<span id="more"></span>
+
+<p>jadx查看apk查看MainActivity</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.easyapk;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> android.os.Bundle;</span><br><span class="line"><span class="keyword">import</span> android.view.View;</span><br><span class="line"><span class="keyword">import</span> android.widget.Button;</span><br><span class="line"><span class="keyword">import</span> android.widget.EditText;</span><br><span class="line"><span class="keyword">import</span> android.widget.Toast;</span><br><span class="line"><span class="keyword">import</span> androidx.appcompat.app.AppCompatActivity;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MainActivity</span> <span class="keyword">extends</span> <span class="title class_">AppCompatActivity</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Button btn;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">c</span> <span class="variable">ccc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">c</span>();</span><br><span class="line">    <span class="comment">/* access modifiers changed from: private */</span></span><br><span class="line">    <span class="keyword">public</span> EditText edt;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">native</span> String <span class="title function_">a</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.loadLibrary(<span class="string">&quot;native-lib&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* access modifiers changed from: protected */</span></span><br><span class="line">    <span class="meta">@Override</span> <span class="comment">// androidx.activity.ComponentActivity, androidx.core.app.ComponentActivity, androidx.appcompat.app.AppCompatActivity, androidx.fragment.app.FragmentActivity</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(Bundle savedInstanceState)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">        setContentView((<span class="type">int</span>) R.layout.activity_main);</span><br><span class="line">        <span class="built_in">this</span>.edt = (EditText) findViewById(R.id.flag);</span><br><span class="line">        <span class="built_in">this</span>.btn = (Button) findViewById(R.id.btn);</span><br><span class="line">        <span class="built_in">this</span>.btn.setOnClickListener(<span class="keyword">new</span> <span class="title class_">View</span>.OnClickListener() &#123;</span><br><span class="line">            <span class="comment">/* class com.example.easyapk.MainActivity.AnonymousClass1 */</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onClick</span><span class="params">(View v)</span> &#123;</span><br><span class="line">                System.out.println(MainActivity.<span class="built_in">this</span>.a());</span><br><span class="line">                System.out.println(MainActivity.<span class="built_in">this</span>.edt.getText().toString());</span><br><span class="line">                System.out.println(MainActivity.<span class="built_in">this</span>.ccc.cc(MainActivity.<span class="built_in">this</span>.edt.getText().toString(), MainActivity.<span class="built_in">this</span>.a()));</span><br><span class="line">                <span class="keyword">if</span> (MainActivity.<span class="built_in">this</span>.ccc.cc(MainActivity.<span class="built_in">this</span>.edt.getText().toString(), MainActivity.<span class="built_in">this</span>.a())) &#123;</span><br><span class="line">                    Toast.makeText(MainActivity.<span class="built_in">this</span>, <span class="string">&quot;正确！&quot;</span>, <span class="number">0</span>).show();</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    Toast.makeText(MainActivity.<span class="built_in">this</span>, <span class="string">&quot;错误！&quot;</span>, <span class="number">0</span>).show();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>显然，是java+so的套路，输入与native-lib数据做比对，看关键代码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.easyapk;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">c</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">char</span>[] ee = &#123;<span class="string">&#x27;@&#x27;</span>, <span class="number">9</span>, <span class="number">1</span>, <span class="number">10</span>, <span class="string">&#x27;1&#x27;</span>, <span class="number">3</span>, <span class="number">8</span>, <span class="number">18</span>, <span class="number">10</span>, <span class="string">&#x27;)&#x27;</span>, <span class="number">26</span>, <span class="number">26</span>, <span class="number">18</span>, <span class="number">30</span>, <span class="number">3</span>, <span class="number">13</span>&#125;; <span class="comment">//key</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* JADX INFO: Multiple debug info for r4v2 char[]: [D(&#x27;j&#x27; int), D(&#x27;dd&#x27; char[])] */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">cc</span><span class="params">(String a1, String a2)</span> &#123;</span><br><span class="line">        <span class="type">char</span>[] aa = <span class="keyword">new</span> <span class="title class_">char</span>[<span class="number">16</span>];</span><br><span class="line">        <span class="comment">// 验证长度</span></span><br><span class="line">        <span class="keyword">if</span> (a1.length() != <span class="number">16</span> || a2.length() != <span class="number">16</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(a1); <span class="comment">//输入字符串</span></span><br><span class="line">        System.out.println(a2); <span class="comment">//jni生成字符串</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">16</span>; i++) &#123;</span><br><span class="line">            aa[i] = (<span class="type">char</span>) (a1.charAt(i) ^ a2.charAt(i)); <span class="comment">//jni生成字符串与输入xor</span></span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(aa);</span><br><span class="line">        <span class="type">char</span>[] bb = <span class="keyword">new</span> <span class="title class_">char</span>[<span class="number">16</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; <span class="number">8</span>; j++) &#123;</span><br><span class="line">            bb[j * <span class="number">2</span>] = aa[(j * <span class="number">2</span>) + <span class="number">1</span>]; <span class="comment">//交换奇偶</span></span><br><span class="line">            bb[(j * <span class="number">2</span>) + <span class="number">1</span>] = aa[j * <span class="number">2</span>]; <span class="comment">//</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">char</span>[] dd = <span class="keyword">new</span> <span class="title class_">char</span>[<span class="number">16</span>];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">s</span> <span class="operator">=</span> <span class="number">15</span>; s &gt;= <span class="number">0</span>; s--) &#123;</span><br><span class="line">            dd[s] = bb[<span class="number">15</span> - s];   <span class="comment">//逆序</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">y</span> <span class="operator">=</span> <span class="number">0</span>; y &lt; <span class="number">16</span>; y++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (dd[y] != <span class="built_in">this</span>.ee[y]) &#123; <span class="comment">//比对</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>加密方法有了，key也知道了，找到加密后的字符串解密就可以了，这题直接有输出，看输出就可以。没有模拟器和logcat环境的直接ida里看也可以。用了NewStringUTF8(a1,”easyapk_is_great”)这个function。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">com.example.easyapk I/System.out: 1234567890123456</span><br><span class="line">com.example.easyapk I/System.out: easyapk_is_great</span><br></pre></td></tr></table></figure>
+
+<p>直接跑脚本</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"></span><br><span class="line">ee = [<span class="number">64</span>, <span class="number">9</span>, <span class="number">1</span>, <span class="number">10</span>, <span class="number">49</span>, <span class="number">3</span>, <span class="number">8</span>, <span class="number">18</span>, <span class="number">10</span>, <span class="number">41</span>, <span class="number">26</span>, <span class="number">26</span>, <span class="number">18</span>, <span class="number">30</span>, <span class="number">3</span>, <span class="number">13</span>] <span class="comment"># 方便起见把char都转换成了int</span></span><br><span class="line">encStr = <span class="string">&#x27;easyapk_is_great&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">deFlag</span>(<span class="params">encStr</span>):</span><br><span class="line">    aa = [<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>]</span><br><span class="line">    a1 = []</span><br><span class="line">    a2 = []</span><br><span class="line">    flag = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(encStr)):</span><br><span class="line">        a2.append(<span class="built_in">ord</span>(encStr[i]))</span><br><span class="line">    bb = ee[::-<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">8</span>):</span><br><span class="line">        aa[i*<span class="number">2</span>] = bb[(i*<span class="number">2</span>)+<span class="number">1</span>]</span><br><span class="line">        aa[(i*<span class="number">2</span>)+<span class="number">1</span>] = bb[i*<span class="number">2</span>]</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">        a1.append(aa[i]^a2[i])</span><br><span class="line">    <span class="keyword">for</span> a <span class="keyword">in</span> a1:</span><br><span class="line">        flag += <span class="string">&#x27;&#x27;</span>.join(<span class="built_in">chr</span>(a))</span><br><span class="line">    <span class="keyword">return</span> flag</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="built_in">print</span> deFlag(encStr)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ ./solve.py</span><br><span class="line">flag&#123;javaandso!&#125;</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Kur0</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://blog.dojokuro.xyz/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-specialapk/">https://blog.dojokuro.xyz/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-specialapk/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://blog.dojokuro.xyz" target="_blank">Kur0's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/reverse/">reverse</a><a class="post-meta__tags" href="/tags/writeup/">writeup</a></div><div class="post_share"><div class="social-share" data-image="/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-specialapk/cover.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/01/30/BUUCTF-BUU-CODE-REVIEW-1-Writeup/"><img class="prev-cover" src="/2022/01/30/BUUCTF-BUU-CODE-REVIEW-1-Writeup/cover.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">BUUCTF - BUU CODE REVIEW 1 Writeup</div></div></a></div><div class="next-post pull-right"><a href="/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/"><img class="next-cover" src="/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">蒙古马2020 Wirteups:reverse-rev</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/" title="蒙古马2020 Wirteups:reverse-rev"><img class="cover" src="/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/cover.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-09-13</div><div class="title">蒙古马2020 Wirteups:reverse-rev</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/uploads/images/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Kur0</div><div class="author-info__description"></div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/02/11/HackTheBox-Nunchucks-Walkthrough/" title="HackTheBox Nunchucks Walkthrough"><img src="/2022/02/11/HackTheBox-Nunchucks-Walkthrough/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="HackTheBox Nunchucks Walkthrough"/></a><div class="content"><a class="title" href="/2022/02/11/HackTheBox-Nunchucks-Walkthrough/" title="HackTheBox Nunchucks Walkthrough">HackTheBox Nunchucks Walkthrough</a><time datetime="2022-02-11T01:47:03.000Z" title="发表于 2022-02-11 09:47:03">2022-02-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/01/30/BUUCTF-BUU-BRUTE-1-Writeup/" title="BUUCTF - BUU BRUTE 1 Writeup"><img src="/2022/01/30/BUUCTF-BUU-BRUTE-1-Writeup/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="BUUCTF - BUU BRUTE 1 Writeup"/></a><div class="content"><a class="title" href="/2022/01/30/BUUCTF-BUU-BRUTE-1-Writeup/" title="BUUCTF - BUU BRUTE 1 Writeup">BUUCTF - BUU BRUTE 1 Writeup</a><time datetime="2022-01-30T08:10:24.000Z" title="发表于 2022-01-30 16:10:24">2022-01-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/01/30/BUUCTF-BUU-CODE-REVIEW-1-Writeup/" title="BUUCTF - BUU CODE REVIEW 1 Writeup"><img src="/2022/01/30/BUUCTF-BUU-CODE-REVIEW-1-Writeup/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="BUUCTF - BUU CODE REVIEW 1 Writeup"/></a><div class="content"><a class="title" href="/2022/01/30/BUUCTF-BUU-CODE-REVIEW-1-Writeup/" title="BUUCTF - BUU CODE REVIEW 1 Writeup">BUUCTF - BUU CODE REVIEW 1 Writeup</a><time datetime="2022-01-30T04:52:58.000Z" title="发表于 2022-01-30 12:52:58">2022-01-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-specialapk/" title="蒙古马2020 Wirteups:reverse-specialapk"><img src="/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-specialapk/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="蒙古马2020 Wirteups:reverse-specialapk"/></a><div class="content"><a class="title" href="/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-specialapk/" title="蒙古马2020 Wirteups:reverse-specialapk">蒙古马2020 Wirteups:reverse-specialapk</a><time datetime="2020-09-13T06:05:06.000Z" title="发表于 2020-09-13 14:05:06">2020-09-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/" title="蒙古马2020 Wirteups:reverse-rev"><img src="/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="蒙古马2020 Wirteups:reverse-rev"/></a><div class="content"><a class="title" href="/2020/09/13/%E8%92%99%E5%8F%A4%E9%A9%AC2020-Wirteups-reverse-rev/" title="蒙古马2020 Wirteups:reverse-rev">蒙古马2020 Wirteups:reverse-rev</a><time datetime="2020-09-13T02:45:06.000Z" title="发表于 2020-09-13 10:45:06">2020-09-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By Kur0</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">本地搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    const valine = new Valine(Object.assign({
+      el: '#vcomment',
+      appId: 'OTXh1tDsl9N2HUi7g7vqKT1h-gzGzoHsz',
+      appKey: '7gVLQUWhTLwzaTQ09Ig8KyQe',
+      avatar: 'monsterid',
+      serverURLs: '',
+      emojiMaps: "",
+      path: window.location.pathname,
+      visitor: false
+    }, null))
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !false) {
+  if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div></div></body></html>
