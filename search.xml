@@ -22,7 +22,7 @@
       
         <tags>
             
-            <tag> writeups </tag>
+            <tag> writeup </tag>
             
             <tag> hackthebox </tag>
             
@@ -57,7 +57,7 @@
       
         <tags>
             
-            <tag> writeups </tag>
+            <tag> writeup </tag>
             
             <tag> buuctf </tag>
             
@@ -84,7 +84,7 @@
       
         <tags>
             
-            <tag> writeups </tag>
+            <tag> writeup </tag>
             
             <tag> buuctf </tag>
             
@@ -111,9 +111,9 @@
       
         <tags>
             
-            <tag> reverse </tag>
-            
             <tag> writeup </tag>
+            
+            <tag> reverse </tag>
             
         </tags>
       
@@ -138,9 +138,9 @@
       
         <tags>
             
-            <tag> reverse </tag>
-            
             <tag> writeup </tag>
+            
+            <tag> reverse </tag>
             
         </tags>
       
@@ -158,7 +158,7 @@
       
       <categories>
           
-          <category> pwn </category>
+          <category> NTU STCS 2016学习笔记 </category>
           
       </categories>
       
@@ -183,7 +183,7 @@
       
       <categories>
           
-          <category> pwn </category>
+          <category> NTU STCS 2016学习笔记 </category>
           
       </categories>
       
@@ -208,7 +208,7 @@
       
       <categories>
           
-          <category> pwn </category>
+          <category> NTU STCS 2016学习笔记 </category>
           
       </categories>
       
@@ -233,7 +233,7 @@
       
       <categories>
           
-          <category> pwn </category>
+          <category> NTU STCS 2016学习笔记 </category>
           
       </categories>
       
